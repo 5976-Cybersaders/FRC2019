@@ -14,8 +14,12 @@ public class GearBoxBurnCommand extends Command {
 
   private DriveTrainSubsystem driveTrain;
   private double speed;
+  private double currentSpeed;
+  private double speedIncrement;
   private long millisTimeout;
   private long endTime;
+
+  boolean timedOut = false;
   
   public GearBoxBurnCommand(DriveTrainSubsystem driveTrain, double speed, int seconds) {
     // Use requires() here to declare subsystem dependencies
@@ -24,20 +28,26 @@ public class GearBoxBurnCommand extends Command {
     requires(driveTrain);
     this.speed = speed;
     this.millisTimeout = seconds * 1000;
+    this.speedIncrement = speed / 100;
+
+    //setTimeout(seconds);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
     endTime = System.currentTimeMillis() + millisTimeout;
+    this.currentSpeed = 0;
+    System.out.println("Init Speed: " + this.speed + " Init timeout (s): " + this.millisTimeout/1000);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    driveTrain.getLeftTalon().set(speed);
-    driveTrain.getRightTalon().set(speed);
-    //this.driveTrain.getServo().set(speed);
+    if (!timedOut){
+      this.currentSpeed = Math.abs(currentSpeed) >= Math.abs(speed) ? speed : this.currentSpeed + this.speedIncrement;
+      setSpeed(currentSpeed);
+    }
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -45,13 +55,25 @@ public class GearBoxBurnCommand extends Command {
   protected boolean isFinished() {
     long timeNow = System.currentTimeMillis();
     
-    boolean val = System.currentTimeMillis() >= endTime;
-    System.out.println("timeNow: " + timeNow + "endTime: " + endTime + "val: " + val);
-    if (val){
-      driveTrain.getLeftTalon().set(0);
-      driveTrain.getRightTalon().set(0);
+    timedOut = System.currentTimeMillis() >= endTime;
+    
+    if (timedOut){
+      this.currentSpeed -= this.speedIncrement;
+      setSpeed(currentSpeed);
     }
-    return val;
+    boolean returnVal = timedOut && Math.abs(this.currentSpeed) <= 0.1;
+    //System.out.println("timeNow: " + timeNow + "endTime: " + endTime + "val: " + timedOut + " returnVal: " + returnVal + " currentSpeed: "  +currentSpeed);
+    if (returnVal) {
+      setSpeed(0);
+      System.out.println("GearBoxBurnCommand finished");
+    }
+    return returnVal;
+  }
+
+  protected void setSpeed(double speed){
+
+    driveTrain.getLeftTalon().set(speed);
+    driveTrain.getRightTalon().set(speed);
   }
 
   // Called once after isFinished returns true

@@ -7,34 +7,28 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.Servo;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 import edu.wpi.first.wpilibj.command.Subsystem;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.GearBoxBurnCommand;
+import frc.robot.commands.DoNothingCommand;
 
 /**
  * Add your docs here.
  */
-public class DriveTrainSubsystem extends Subsystem {
-  
-  private Talon left, right;
+public class CargoIntakeSubsystem extends Subsystem {
 
-  public DriveTrainSubsystem(int left, int right){
-    this.left = new Talon(left);
-    this.right = new Talon(right);
+  private WPI_TalonSRX talon;
+
+  public CargoIntakeSubsystem(int port){
+    this.talon = new WPI_TalonSRX(port);
   }
 
   @Override
   public void initDefaultCommand() {
-    // Set the default command for a subsystem here.
-    // setDefaultCommand(new MySpecialCommand());
-    setDefaultCommand(new ExampleCommand(this));
+    //setDefaultCommand(new DoNothingCommand(10));
   }
-  public Talon getLeftTalon () {
-    return left;
-  }
-  public Talon getRightTalon () {
-    return right;
+
+  public WPI_TalonSRX getTalon(){
+    return this.talon;
   }
 }

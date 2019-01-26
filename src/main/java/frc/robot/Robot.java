@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.DoNothingCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.GearBoxBurnCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
@@ -47,7 +48,7 @@ public class Robot extends TimedRobot {
     m_oi = new OI();
     counter = 0;
     // chooser.addOption("My Auto", new MyAutoCommand());
-    this.driveTrain = new DriveTrainSubsystem(RobotMap.leftTalonPort, RobotMap.rightTalonPort, 2);
+    this.driveTrain = new DriveTrainSubsystem(RobotMap.leftTalonPort, RobotMap.rightTalonPort);
 
     m_chooser.setDefaultOption("Default Auto", new ExampleCommand(driveTrain));
     SmartDashboard.putData("Auto mode", m_chooser);
@@ -124,6 +125,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    this.burnInCommand = null;
   }
 
   /**
@@ -147,9 +149,41 @@ public class Robot extends TimedRobot {
   }
 
   class BurnCommandGroup extends CommandGroup {
+    int runTimeSeconds = 20;
+    int waitTimeSeconds = 2*runTimeSeconds;
+    int iterations = 2;
     BurnCommandGroup(){
-      this.addSequential(new GearBoxBurnCommand(driveTrain, 0.2, 5));
-      this.addSequential(new GearBoxBurnCommand(driveTrain, 0.4, 5));
+      // this.addCommand(-0.1, runTimeSeconds, iterations);
+      // this.addCommand(-0.2, runTimeSeconds, iterations);
+      // this.addCommand(-0.3, runTimeSeconds, iterations);
+      // this.addCommand(-0.4, runTimeSeconds, iterations);
+      // this.addCommand(-0.5, runTimeSeconds, iterations);
+      // this.addCommand(-0.6, runTimeSeconds, iterations);
+      // this.addCommand(-0.7, runTimeSeconds, iterations);
+      // this.addCommand(-0.8, runTimeSeconds, iterations);
+
+      this.addCommand(0.3, runTimeSeconds, 8);
+      this.addCommand(-0.3, runTimeSeconds, 8);
+      this.addCommand(0.5, runTimeSeconds, iterations);
+      this.addCommand(-0.5, runTimeSeconds, iterations);
+      this.addCommand(0.7, runTimeSeconds, 1);
+      this.addCommand(-0.7, runTimeSeconds, 1);
+
+    }
+
+    private void addCommand(double speed, int runSeconds, int iterations){
+      for (int i = 0; i < iterations; i++){
+        SingleStepBurnCommandGroup singleStep = new SingleStepBurnCommandGroup(speed, runSeconds);
+        this.addSequential(singleStep);
+      }
+    }
+  }
+
+  class SingleStepBurnCommandGroup extends CommandGroup {
+    SingleStepBurnCommandGroup(double speed, int runSeconds){
+      int waitSeconds = runSeconds * 2;
+      this.addSequential(new GearBoxBurnCommand(driveTrain, speed, runSeconds));
+      this.addSequential(new DoNothingCommand(driveTrain, waitSeconds));
     }
   }
 }
