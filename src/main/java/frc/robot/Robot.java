@@ -15,7 +15,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.DoNothingCommand;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.GearBoxBurnCommand;
+import frc.robot.commands.drivetraincommands.GearBoxBurnCommand;
+import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 
@@ -34,6 +35,7 @@ public class Robot extends TimedRobot {
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   private DriveTrainSubsystem driveTrain;
+  private CameraSubsystem cameraSubsystem;
 
   private Command burnInCommand;
 
@@ -49,6 +51,7 @@ public class Robot extends TimedRobot {
     counter = 0;
     // chooser.addOption("My Auto", new MyAutoCommand());
     this.driveTrain = new DriveTrainSubsystem(RobotMap.leftTalonPort, RobotMap.rightTalonPort);
+    this.cameraSubsystem = new CameraSubsystem(0, 1);
 
     m_chooser.setDefaultOption("Default Auto", new ExampleCommand(driveTrain));
     SmartDashboard.putData("Auto mode", m_chooser);
@@ -147,6 +150,8 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
   }
+
+  public CameraSubsystem getCameraSubsystem() { return this.cameraSubsystem; }
 
   class BurnCommandGroup extends CommandGroup {
     int runTimeSeconds = 20;

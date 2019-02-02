@@ -5,29 +5,13 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.subsystems;
-
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
-import edu.wpi.first.wpilibj.command.Subsystem;
-
-import frc.robot.commands.liftcommands.LiftCommand;
+package frc.robot;
 
 /**
  * Add your docs here.
  */
-public class LiftSubsystem extends Subsystem {
+public interface CMHDigitalInput {
 
-  private WPI_TalonSRX talon;
+    public boolean get();
 
-  public LiftSubsystem(int port){
-    this.talon = new WPI_TalonSRX(port);
-  }
-
-  @Override
-  public void initDefaultCommand() {
-    //setDefaultCommand(new LiftCommand(this, 0));
-  }
-
-  public WPI_TalonSRX getTalon(){ return this.talon; }
 }

@@ -7,6 +7,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.XBoxButton.RawButton;
+
+import frc.robot.commands.cameracommands.SwitchCameraCommand;
+
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
@@ -39,4 +44,25 @@ public class OI {
   // Start the command when the button is released and let it run the command
   // until it is finished as determined by it's isFinished method.
   // button.whenReleased(new ExampleCommand());
+
+  private final XboxController DRIVER_CONTROLLER = new XboxController(0); 
+  private final XboxController SECONDARY_CONTROLLER = new XboxController(1);
+
+  private XBoxButton switchCamera1;
+  private XBoxButton switchCamera2;
+
+  public OI(Robot robot){
+    this.switchCamera1 = new XBoxButton(DRIVER_CONTROLLER, RawButton.X);
+    this.switchCamera2 = new XBoxButton(DRIVER_CONTROLLER, RawButton.Y);
+
+    this.switchCamera1.whenPressed(new SwitchCameraCommand(robot.getCameraSubsystem(), robot.getCameraSubsystem().getCamera1()));
+    this.switchCamera2.whenPressed(new SwitchCameraCommand(robot.getCameraSubsystem(), robot.getCameraSubsystem().getCamera2()));
+
+    
+
+  }
+
+  public OI(){
+
+  }
 }

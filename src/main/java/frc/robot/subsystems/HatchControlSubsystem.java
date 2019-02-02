@@ -7,34 +7,29 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.drivetraincommands.GearBoxBurnCommand;
-import frc.robot.commands.drivetraincommands.TeleOpTankDrive;
 
 /**
  * Add your docs here.
  */
-public class DriveTrainSubsystem extends Subsystem {
-  
-  private Talon left, right;
+public class HatchControlSubsystem extends Subsystem {
+  // Put methods for controlling this subsystem
+  // here. Call these from Commands.
 
-  public DriveTrainSubsystem(int left, int right){
-    this.left = new Talon(left);
-    this.right = new Talon(right);
+  private Servo servo;
+
+  public HatchControlSubsystem(int port){
+    this.servo = new Servo(port);
   }
 
   @Override
   public void initDefaultCommand() {
-    // TODO: determine if need to set default command to TeleOpTankDrive
+    // Set the default command for a subsystem here.
+    // setDefaultCommand(new MySpecialCommand());
   }
 
-  public Talon getLeftTalon () {
-    return left;
-  }
-  
-  public Talon getRightTalon () {
-    return right;
+  public Servo getServo() {
+    return this.servo;
   }
 }

@@ -5,29 +5,26 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.subsystems;
+package frc.robot;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
-import edu.wpi.first.wpilibj.command.Subsystem;
-
-import frc.robot.commands.liftcommands.LiftCommand;
+import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.XboxController;
 
 /**
  * Add your docs here.
  */
-public class LiftSubsystem extends Subsystem {
+public class XBoxTrigger implements CMHDigitalInput {
 
-  private WPI_TalonSRX talon;
+    private XboxController controller;
+    private GenericHID.Hand hand;
 
-  public LiftSubsystem(int port){
-    this.talon = new WPI_TalonSRX(port);
-  }
+    public XBoxTrigger(XboxController controller, GenericHID.Hand hand) {
+        this.controller = controller;
+        this.hand = hand;
+    }
 
-  @Override
-  public void initDefaultCommand() {
-    //setDefaultCommand(new LiftCommand(this, 0));
-  }
-
-  public WPI_TalonSRX getTalon(){ return this.talon; }
+    @Override
+    public boolean get(){
+        return controller.getTriggerAxis(hand) > 0.5;
+    }
 }

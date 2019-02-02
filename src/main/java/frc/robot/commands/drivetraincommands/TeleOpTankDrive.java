@@ -5,7 +5,7 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.drivetraincommands;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
