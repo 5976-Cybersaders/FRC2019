@@ -10,8 +10,9 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
-
-import frc.robot.commands.liftcommands.LiftCommand;
+import frc.robot.OI;
+import frc.robot.RobotMap;
+import frc.robot.commands.liftcommands.ManualMoveLiftCommand;
 
 /**
  * Add your docs here.
@@ -19,14 +20,16 @@ import frc.robot.commands.liftcommands.LiftCommand;
 public class LiftSubsystem extends Subsystem {
 
   private WPI_TalonSRX talon;
+  private OI oi;
 
-  public LiftSubsystem(int port){
-    this.talon = new WPI_TalonSRX(port);
+  public LiftSubsystem(OI oi){
+    this.oi = oi;
+    this.talon = new WPI_TalonSRX(RobotMap.LIFT_TALON_ID);
   }
 
   @Override
   public void initDefaultCommand() {
-    //setDefaultCommand(new LiftCommand(this, 0));
+    setDefaultCommand(new ManualMoveLiftCommand(this, oi.getSecondaryController()));
   }
 
   public WPI_TalonSRX getTalon(){ return this.talon; }

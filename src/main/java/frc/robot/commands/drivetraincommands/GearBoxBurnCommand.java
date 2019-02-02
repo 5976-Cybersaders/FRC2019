@@ -8,11 +8,11 @@
 package frc.robot.commands.drivetraincommands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.DriveTrainBurnInSubsystem;
 
 public class GearBoxBurnCommand extends Command {
 
-  private DriveTrainSubsystem driveTrain;
+  private DriveTrainBurnInSubsystem driveTrain;
   private double speed;
   private double currentSpeed;
   private double speedIncrement;
@@ -21,7 +21,7 @@ public class GearBoxBurnCommand extends Command {
 
   boolean timedOut = false;
   
-  public GearBoxBurnCommand(DriveTrainSubsystem driveTrain, double speed, int seconds) {
+  public GearBoxBurnCommand(DriveTrainBurnInSubsystem driveTrain, double speed, int seconds) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     this.driveTrain = driveTrain;

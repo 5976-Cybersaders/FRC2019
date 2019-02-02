@@ -7,18 +7,27 @@
 
 package frc.robot.commands.liftcommands;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.subsystems.LiftSubsystem;
 
-public class LiftCommand extends Command {
+public abstract class MoveLiftCommand extends Command {
 
-  private LiftSubsystem lift;
-  private double speed;
+  private WPI_TalonSRX talon;
+  private int ticks;
 
-  public LiftCommand(LiftSubsystem lift, double speed) {
-    this.lift = lift;
-    this.speed = speed;
-    requires(lift);
+  private int kPositionTolerance = 10; //TODO: figure out constants
+
+  public MoveLiftCommand(LiftSubsystem liftSubsystem, int posInches, int timeout) {
+    // Use requires() here to declare subsystem dependencies
+    // eg. requires(chassis);
+    this.ticks = (int) (posInches * toTicks(posInches));
+    this.talon = liftSubsystem.getTalon();
+    requires(liftSubsystem);
+    setTimeout(timeout);
+    setInterruptible(true);
   }
 
   // Called just before this Command runs the first time
@@ -29,13 +38,13 @@ public class LiftCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    this.lift.getTalon().set(speed);
+    this.talon.set(ControlMode.Position, ticks);
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    return isTimedOut() || isAtPos();
   }
 
   // Called once after isFinished returns true
@@ -47,5 +56,13 @@ public class LiftCommand extends Command {
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+  }
+
+  private boolean isAtPos(){
+    return this.talon.getSelectedSensorPosition() - this.ticks < kPositionTolerance;
+  }
+
+  private double toTicks(double inches) { // TODO: make sure this is correct
+    return inches / (Math.PI * 2.5) * 4096;
   }
 }

@@ -11,6 +11,9 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.XBoxButton.RawButton;
 
 import frc.robot.commands.cameracommands.SwitchCameraCommand;
+import frc.robot.commands.hatchcommands.DeliverHatchCommand;
+import frc.robot.commands.hatchcommands.GrabHatchCommand;
+import frc.robot.commands.liftcommands.RaiseLiftCommand;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -51,6 +54,14 @@ public class OI {
   private XBoxButton switchCamera1;
   private XBoxButton switchCamera2;
 
+  private XBoxButton liftToLowCargo;
+  private XBoxButton liftToMiddleCargo;
+  private XBoxButton liftToLowHatch;
+
+  private XBoxButton grabHatch;
+  private XBoxButton deliverHatch;
+
+
   public OI(Robot robot){
     this.switchCamera1 = new XBoxButton(DRIVER_CONTROLLER, RawButton.X);
     this.switchCamera2 = new XBoxButton(DRIVER_CONTROLLER, RawButton.Y);
@@ -58,11 +69,27 @@ public class OI {
     this.switchCamera1.whenPressed(new SwitchCameraCommand(robot.getCameraSubsystem(), robot.getCameraSubsystem().getCamera1()));
     this.switchCamera2.whenPressed(new SwitchCameraCommand(robot.getCameraSubsystem(), robot.getCameraSubsystem().getCamera2()));
 
-    
+    this.liftToLowCargo = new XBoxButton(SECONDARY_CONTROLLER, RawButton.X);
+    this.liftToMiddleCargo = new XBoxButton(SECONDARY_CONTROLLER, RawButton.Y);
+    this.liftToLowHatch = new XBoxButton(SECONDARY_CONTROLLER, RawButton.A);
+
+    this.liftToLowCargo.whenPressed(RaiseLiftCommand.RaiseLiftToLowCargo(robot.getLiftSubsystem()));
+    this.liftToMiddleCargo.whenPressed(RaiseLiftCommand.RaiseLiftToMiddleCargo(robot.getLiftSubsystem()));
+    this.liftToLowHatch.whenPressed(RaiseLiftCommand.RaiseLiftToLowHatch(robot.getLiftSubsystem()));
+
+    this.grabHatch = new XBoxButton(SECONDARY_CONTROLLER, RawButton.LB);
+    this.deliverHatch = new XBoxButton(SECONDARY_CONTROLLER, RawButton.RB);
+
+    this.grabHatch.whenPressed(new GrabHatchCommand(robot.getHatchControlSubsystem()));
+    this.deliverHatch.whenPressed(new DeliverHatchCommand(robot.getHatchControlSubsystem()));
+
 
   }
 
   public OI(){
 
   }
+
+  public XboxController getDriverController() { return this.DRIVER_CONTROLLER; }
+  public XboxController getSecondaryController() { return this.SECONDARY_CONTROLLER; }
 }

@@ -17,7 +17,7 @@ public class SwitchCameraCommand extends Command {
   private UsbCamera nextCamera;
   private Boolean activated;
 
-  public SwitchCameraCommand(CameraSubsystem cameras, UsbCamera nextCamera) {
+  public SwitchCameraCommand(CameraSubsystem cameras, UsbCamera nextCamera) { //TODO: cleanup
     this.cameraSubsystem = cameras;
     this.nextCamera = nextCamera;
     requires(cameras);

@@ -8,13 +8,13 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.DriveTrainBurnInSubsystem;
 
 /**
  * An example command.  You can replace me with your own command.
  */
 public class ExampleCommand extends Command {
-  public ExampleCommand(DriveTrainSubsystem driveTrain) {
+  public ExampleCommand(DriveTrainBurnInSubsystem driveTrain) {
     // Use requires() here to declare subsystem dependencies
     requires(driveTrain);
     setInterruptible(true);

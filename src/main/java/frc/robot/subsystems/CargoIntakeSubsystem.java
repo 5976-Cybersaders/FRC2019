@@ -10,7 +10,9 @@ package frc.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
-import frc.robot.commands.DoNothingCommand;
+import frc.robot.OI;
+import frc.robot.RobotMap;
+import frc.robot.commands.cargointakecommands.CargoIntakeCommand;
 
 /**
  * Add your docs here.
@@ -18,14 +20,16 @@ import frc.robot.commands.DoNothingCommand;
 public class CargoIntakeSubsystem extends Subsystem {
 
   private WPI_TalonSRX talon;
+  private OI oi;
 
-  public CargoIntakeSubsystem(int port){
-    this.talon = new WPI_TalonSRX(port);
+  public CargoIntakeSubsystem(OI oi){
+    this.talon = new WPI_TalonSRX(RobotMap.INTAKE_TALON_ID);
+    this.oi = oi;
   }
 
   @Override
   public void initDefaultCommand() {
-    //setDefaultCommand(new DoNothingCommand(10));
+    setDefaultCommand(new CargoIntakeCommand(this.oi.getSecondaryController(), this));
   }
 
   public WPI_TalonSRX getTalon(){

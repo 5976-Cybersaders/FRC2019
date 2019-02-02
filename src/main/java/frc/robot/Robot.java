@@ -17,8 +17,12 @@ import frc.robot.commands.DoNothingCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.drivetraincommands.GearBoxBurnCommand;
 import frc.robot.subsystems.CameraSubsystem;
+import frc.robot.subsystems.CargoIntakeSubsystem;
+import frc.robot.subsystems.DriveTrainBurnInSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.HatchControlSubsystem;
+import frc.robot.subsystems.LiftSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -34,7 +38,11 @@ public class Robot extends TimedRobot {
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
+  private DriveTrainBurnInSubsystem driveTrainBurnIn;
   private DriveTrainSubsystem driveTrain;
+  private LiftSubsystem liftSubsystem;
+  private CargoIntakeSubsystem cargoIntakeSubsystem;
+  private HatchControlSubsystem hatchControlSubsystem;
   private CameraSubsystem cameraSubsystem;
 
   private Command burnInCommand;
@@ -47,13 +55,18 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    m_oi = new OI();
     counter = 0;
     // chooser.addOption("My Auto", new MyAutoCommand());
-    this.driveTrain = new DriveTrainSubsystem(RobotMap.leftTalonPort, RobotMap.rightTalonPort);
-    this.cameraSubsystem = new CameraSubsystem(0, 1);
+    this.driveTrainBurnIn = new DriveTrainBurnInSubsystem(RobotMap.leftTalonPort, RobotMap.rightTalonPort);
+    this.driveTrain = new DriveTrainSubsystem(m_oi);
+    this.liftSubsystem = new LiftSubsystem(m_oi);
+    this.hatchControlSubsystem = new HatchControlSubsystem();
+    this.cargoIntakeSubsystem = new CargoIntakeSubsystem(m_oi);
+    this.cameraSubsystem = new CameraSubsystem(0, 1); // TODO: change CameraSubsystem constructor
 
-    m_chooser.setDefaultOption("Default Auto", new ExampleCommand(driveTrain));
+    m_oi = new OI(this);
+
+    m_chooser.setDefaultOption("Default Auto", new ExampleCommand(driveTrainBurnIn));
     SmartDashboard.putData("Auto mode", m_chooser);
   }
 
@@ -151,6 +164,10 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   }
 
+  public DriveTrainSubsystem getDriveTrain() { return this.driveTrain; }
+  public LiftSubsystem getLiftSubsystem() { return this.liftSubsystem; }
+  public CargoIntakeSubsystem getCargoIntakeSubsystem() { return this.cargoIntakeSubsystem; }
+  public HatchControlSubsystem getHatchControlSubsystem() { return this.hatchControlSubsystem; }
   public CameraSubsystem getCameraSubsystem() { return this.cameraSubsystem; }
 
   class BurnCommandGroup extends CommandGroup {
@@ -187,8 +204,8 @@ public class Robot extends TimedRobot {
   class SingleStepBurnCommandGroup extends CommandGroup {
     SingleStepBurnCommandGroup(double speed, int runSeconds){
       int waitSeconds = runSeconds * 2;
-      this.addSequential(new GearBoxBurnCommand(driveTrain, speed, runSeconds));
-      this.addSequential(new DoNothingCommand(driveTrain, waitSeconds));
+      this.addSequential(new GearBoxBurnCommand(driveTrainBurnIn, speed, runSeconds));
+      this.addSequential(new DoNothingCommand(driveTrainBurnIn, waitSeconds));
     }
   }
 }

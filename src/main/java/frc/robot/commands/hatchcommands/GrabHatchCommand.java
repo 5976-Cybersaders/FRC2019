@@ -12,7 +12,7 @@ import frc.robot.subsystems.HatchControlSubsystem;
 public class GrabHatchCommand extends HatchControlCommand {
 
   public GrabHatchCommand(HatchControlSubsystem hatchControl) {
-    super(hatchControl, 0);
+    super(hatchControl, 90);
   }
   
 }

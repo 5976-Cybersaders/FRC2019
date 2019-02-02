@@ -5,21 +5,24 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands;
+package frc.robot.commands.cargointakecommands;
 
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.subsystems.DriveTrainBurnInSubsystem;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
+import frc.robot.subsystems.CargoIntakeSubsystem;
 
-public class DoNothingCommand extends Command {
+public class CargoIntakeCommand extends Command {
 
-  private DriveTrainBurnInSubsystem driveTrain;
+  private XboxController controller;
+  private WPI_TalonSRX talon;
 
-  public DoNothingCommand(DriveTrainBurnInSubsystem driveTrain, int secondsTimeout) {
-    this.setTimeout(secondsTimeout);
-    this.driveTrain = driveTrain;
-    requires(driveTrain);
-    // Use requires() here to declare subsystem dependencies
-    // eg. requires(chassis);
+  public CargoIntakeCommand(XboxController controller, CargoIntakeSubsystem cargoIntakeSubsystem) {
+    this.controller = controller;
+    this.talon = cargoIntakeSubsystem.getTalon();
+    requires(cargoIntakeSubsystem);
   }
 
   // Called just before this Command runs the first time
@@ -30,14 +33,13 @@ public class DoNothingCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    this.driveTrain.getLeftTalon().set(0);
-    this.driveTrain.getRightTalon().set(0);
+    this.talon.set(this.adjustSpeed(this.controller.getY(Hand.kRight)));
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return this.isTimedOut();
+    return false;
   }
 
   // Called once after isFinished returns true
@@ -49,5 +51,9 @@ public class DoNothingCommand extends Command {
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+  }
+
+  private double adjustSpeed(double speed){
+    return speed < 0.1 ? 0 : speed;
   }
 }

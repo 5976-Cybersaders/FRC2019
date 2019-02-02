@@ -7,34 +7,46 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.drivetraincommands.GearBoxBurnCommand;
+import frc.robot.OI;
+import frc.robot.RobotMap;
 import frc.robot.commands.drivetraincommands.TeleOpTankDrive;
+
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 /**
  * Add your docs here.
  */
 public class DriveTrainSubsystem extends Subsystem {
-  
-  private Talon left, right;
+  // Put methods for controlling this subsystem
+  // here. Call these from Commands.
 
-  public DriveTrainSubsystem(int left, int right){
-    this.left = new Talon(left);
-    this.right = new Talon(right);
+  private WPI_TalonSRX leftMaster, leftSlave, rightMaster, rightSlave;
+
+  private OI oi;
+
+  public DriveTrainSubsystem(OI oi){
+    super();
+    this.oi = oi;
+    this.leftMaster = new WPI_TalonSRX(RobotMap.LEFT_MASTER_TALON_ID);
+    this.leftSlave = new WPI_TalonSRX(RobotMap.LEFT_SLAVE_TALON_ID);
+    this.rightMaster = new WPI_TalonSRX(RobotMap.RIGHT_MASTER_TALON_ID);
+    this.rightSlave = new WPI_TalonSRX(RobotMap.RIGHT_SLAVE_TALON_ID);
+    
   }
 
   @Override
-  public void initDefaultCommand() {
-    // TODO: determine if need to set default command to TeleOpTankDrive
+  public void initDefaultCommand() { // TODO: update if choosing to do autonomous
+    // Set the default command for a subsystem here.
+    setDefaultCommand(new TeleOpTankDrive(this.oi.getDriverController(), this));
   }
 
-  public Talon getLeftTalon () {
-    return left;
+  public void invertMotors(){
+    // TODO: find out which motors need to be inverted
   }
-  
-  public Talon getRightTalon () {
-    return right;
-  }
+
+  public WPI_TalonSRX getLeftMaster() { return this.leftMaster; }
+  public WPI_TalonSRX getLeftSlave() { return this.leftSlave; }
+  public WPI_TalonSRX getRightMaster() { return this.rightMaster; }
+  public WPI_TalonSRX getRightSlave() { return this.rightSlave; }
 }
