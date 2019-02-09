@@ -26,14 +26,12 @@ public class RobotMap {
   public static int leftTalonPort = 0;
   public static int rightTalonPort = 1;
 
-  public static int LEFT_MASTER_TALON_ID = 0;
+  public static int LEFT_MASTER_TALON_ID = 2;
   public static int LEFT_SLAVE_TALON_ID = 1;
-  public static int RIGHT_MASTER_TALON_ID = 2;
+  public static int RIGHT_MASTER_TALON_ID = 4;
   public static int RIGHT_SLAVE_TALON_ID = 3;
 
-  public static int LIFT_TALON_ID = 4;
+  public static int LIFT_TALON_ID = 5;
 
-  public static int INTAKE_TALON_ID = 5;
-
-  public static int HATCH_SERVO_ID = 6;
+  public static int INTAKE_TALON_ID = 6;
 }

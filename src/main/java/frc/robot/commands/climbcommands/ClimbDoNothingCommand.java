@@ -5,24 +5,21 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.cargointakecommands;
+package frc.robot.commands.climbcommands;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
-import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.GenericHID.Hand;
-import frc.robot.subsystems.CargoIntakeSubsystem;
+import frc.robot.subsystems.ClimbSubsystem;
 
-public class CargoIntakeCommand extends Command {
+public class ClimbDoNothingCommand extends Command {
 
-  private XboxController controller;
-  private WPI_TalonSRX talon;
+  private DoubleSolenoid front;
+  private DoubleSolenoid back;
 
-  public CargoIntakeCommand(XboxController controller, CargoIntakeSubsystem cargoIntakeSubsystem) {
-    this.controller = controller;
-    this.talon = cargoIntakeSubsystem.getTalon();
-    requires(cargoIntakeSubsystem);
+  public ClimbDoNothingCommand(ClimbSubsystem climbSubsystem) {
+    this.front = climbSubsystem.getFrontDoubleSolenoid();
+    this.back = climbSubsystem.getBackDoubleSolenoid();
+    requires(climbSubsystem);
   }
 
   // Called just before this Command runs the first time
@@ -30,13 +27,11 @@ public class CargoIntakeCommand extends Command {
   protected void initialize() {
   }
 
-  // left trigger goes backwards, right trigger goes forwards
+  // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    double speed = this.controller.getTriggerAxis(Hand.kLeft) > this.controller.getTriggerAxis(Hand.kRight) ? 
-      -this.controller.getTriggerAxis(Hand.kLeft) :
-      this.controller.getTriggerAxis(Hand.kRight);
-    this.talon.set(adjustSpeed(speed));
+    this.front.set(DoubleSolenoid.Value.kOff);
+    this.back.set(DoubleSolenoid.Value.kOff);
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -54,9 +49,5 @@ public class CargoIntakeCommand extends Command {
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-  }
-
-  private double adjustSpeed(double speed){
-    return speed < 0.05 ? 0 : speed;
   }
 }

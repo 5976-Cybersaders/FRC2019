@@ -10,11 +10,11 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.subsystems.DriveTrainBurnInSubsystem;
 
-public class DoNothingCommand extends Command {
+public class BurnInDoNothingCommand extends Command {
 
   private DriveTrainBurnInSubsystem driveTrain;
 
-  public DoNothingCommand(DriveTrainBurnInSubsystem driveTrain, int secondsTimeout) {
+  public BurnInDoNothingCommand(DriveTrainBurnInSubsystem driveTrain, int secondsTimeout) {
     this.setTimeout(secondsTimeout);
     this.driveTrain = driveTrain;
     requires(driveTrain);

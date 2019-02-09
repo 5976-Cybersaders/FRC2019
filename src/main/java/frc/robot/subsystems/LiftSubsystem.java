@@ -12,7 +12,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.OI;
 import frc.robot.RobotMap;
-import frc.robot.commands.liftcommands.ManualMoveLiftCommand;
+import frc.robot.commands.liftcommands.ManualMoveLiftCommandGroup;
 
 /**
  * Add your docs here.
@@ -29,7 +29,7 @@ public class LiftSubsystem extends Subsystem {
 
   @Override
   public void initDefaultCommand() {
-    setDefaultCommand(new ManualMoveLiftCommand(this, oi.getSecondaryController()));
+    setDefaultCommand(new ManualMoveLiftCommandGroup(oi.getSecondaryController(), this));
   }
 
   public WPI_TalonSRX getTalon(){ return this.talon; }

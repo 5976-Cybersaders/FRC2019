@@ -80,12 +80,6 @@ public class TeleOpTankDrive extends Command {
         talon.configPeakOutputReverse(-1, 0);
         talon.configNominalOutputForward(0, 0);
         talon.configNominalOutputReverse(0, 0);
-
-        talon.selectProfileSlot(1, 0);
-        talon.configPeakOutputForward(1, 0);
-        talon.configPeakOutputReverse(-1, 0);
-        talon.configNominalOutputForward(0, 0);
-        talon.configNominalOutputReverse(0, 0);
     }
 
     @Override

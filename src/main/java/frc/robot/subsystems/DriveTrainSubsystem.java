@@ -12,6 +12,9 @@ import frc.robot.OI;
 import frc.robot.RobotMap;
 import frc.robot.commands.drivetraincommands.TeleOpTankDrive;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 /**
@@ -22,17 +25,20 @@ public class DriveTrainSubsystem extends Subsystem {
   // here. Call these from Commands.
 
   private WPI_TalonSRX leftMaster, leftSlave, rightMaster, rightSlave;
+  private List<WPI_TalonSRX> rightTalons;
+  private List<WPI_TalonSRX> leftTalons;
 
   private OI oi;
 
   public DriveTrainSubsystem(OI oi){
-    super();
     this.oi = oi;
     this.leftMaster = new WPI_TalonSRX(RobotMap.LEFT_MASTER_TALON_ID);
     this.leftSlave = new WPI_TalonSRX(RobotMap.LEFT_SLAVE_TALON_ID);
     this.rightMaster = new WPI_TalonSRX(RobotMap.RIGHT_MASTER_TALON_ID);
     this.rightSlave = new WPI_TalonSRX(RobotMap.RIGHT_SLAVE_TALON_ID);
-    
+
+    leftTalons = Arrays.asList(this.leftMaster, this.leftSlave);
+    rightTalons = Arrays.asList(this.rightMaster, this.rightSlave);
   }
 
   @Override
@@ -42,7 +48,15 @@ public class DriveTrainSubsystem extends Subsystem {
   }
 
   public void invertMotors(){
-    // TODO: find out which motors need to be inverted
+    List<WPI_TalonSRX> talonsToInvert = rightTalons, talonsToNotInvert = leftTalons;
+    talonsToInvert.forEach(talon -> {
+        talon.setSensorPhase(true);
+        talon.setInverted(true);
+     });
+     talonsToNotInvert.forEach(talon -> {
+         talon.setSensorPhase(true);
+         talon.setInverted(false);
+     });
   }
 
   public WPI_TalonSRX getLeftMaster() { return this.leftMaster; }

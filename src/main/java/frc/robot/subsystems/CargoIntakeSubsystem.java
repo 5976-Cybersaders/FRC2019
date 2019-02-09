@@ -29,7 +29,7 @@ public class CargoIntakeSubsystem extends Subsystem {
 
   @Override
   public void initDefaultCommand() {
-    setDefaultCommand(new CargoIntakeCommand(this.oi.getSecondaryController(), this));
+    setDefaultCommand(new CargoIntakeCommand(this.oi.getDriverController(), this));
   }
 
   public WPI_TalonSRX getTalon(){

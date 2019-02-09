@@ -11,9 +11,11 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.XBoxButton.RawButton;
 
 import frc.robot.commands.cameracommands.SwitchCameraCommand;
+import frc.robot.commands.climbcommands.ActuateBackPistonCommand;
+import frc.robot.commands.climbcommands.ActuateFrontPistonCommand;
 import frc.robot.commands.hatchcommands.DeliverHatchCommand;
 import frc.robot.commands.hatchcommands.GrabHatchCommand;
-import frc.robot.commands.liftcommands.RaiseLiftCommand;
+import frc.robot.commands.liftcommands.RaiseLiftToFixedPositionCommand;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -60,6 +62,9 @@ public class OI {
   private XBoxButton grabHatch;
   private XBoxButton deliverHatch;
 
+  private XBoxButton actuateFrontPiston;
+  private XBoxButton actuateBackPiston;
+
 
   public OI(Robot robot){
     System.out.println("We made it to the OI bois :)");
@@ -67,23 +72,28 @@ public class OI {
     this.liftToLowCargo = new XBoxButton(SECONDARY_CONTROLLER, RawButton.X);
     this.liftToMiddleCargo = new XBoxButton(SECONDARY_CONTROLLER, RawButton.Y);
     this.liftToLowHatch = new XBoxButton(SECONDARY_CONTROLLER, RawButton.A);
-    this.grabHatch = new XBoxButton(SECONDARY_CONTROLLER, RawButton.LB);
+    this.grabHatch = new XBoxButton(SECONDARY_CONTROLLER, RawButton.LB); //TODO: remove hatch code
     this.deliverHatch = new XBoxButton(SECONDARY_CONTROLLER, RawButton.RB);
+    this.actuateFrontPiston = new XBoxButton(SECONDARY_CONTROLLER, RawButton.RB);
+    this.actuateBackPiston = new XBoxButton(SECONDARY_CONTROLLER, RawButton.LB);
     System.out.println("Adios amigos :(");
   }
 
-  public void bindButtons(Robot robot){
-    //this.liftToLowCargo.whenPressed(RaiseLiftCommand.RaiseLiftToLowCargo(robot.getLiftSubsystem()));
-    //this.liftToMiddleCargo.whenPressed(RaiseLiftCommand.RaiseLiftToMiddleCargo(robot.getLiftSubsystem()));
-    //this.liftToLowHatch.whenPressed(RaiseLiftCommand.RaiseLiftToLowHatch(robot.getLiftSubsystem()));
-    this.switchCamera1.whenPressed(new SwitchCameraCommand(robot.getCameraSubsystem()));
-    //this.grabHatch.whenPressed(new GrabHatchCommand(robot.getHatchControlSubsystem()));
-    //this.deliverHatch.whenPressed(new DeliverHatchCommand(robot.getHatchControlSubsystem()));
-
+  public OI(){
   }
 
-  public OI(){
+  public void bindButtons(Robot robot){
+    this.switchCamera1.whenPressed(new SwitchCameraCommand(robot.getCameraSubsystem()));
+    
+    this.liftToLowCargo.whenPressed(RaiseLiftToFixedPositionCommand.RaiseLiftToLowCargo(robot.getLiftSubsystem()));
+    this.liftToMiddleCargo.whenPressed(RaiseLiftToFixedPositionCommand.RaiseLiftToMiddleCargo(robot.getLiftSubsystem()));
+    this.liftToLowHatch.whenPressed(RaiseLiftToFixedPositionCommand.RaiseLiftToLowHatch(robot.getLiftSubsystem()));
 
+    this.grabHatch.whenPressed(new GrabHatchCommand(robot.getHatchControlSubsystem()));
+    this.deliverHatch.whenPressed(new DeliverHatchCommand(robot.getHatchControlSubsystem()));
+    
+    this.actuateFrontPiston.whenPressed(new ActuateFrontPistonCommand(robot.getClimbSubsystem()));
+    this.actuateBackPiston.whenPressed(new ActuateBackPistonCommand(robot.getClimbSubsystem()));
   }
 
   public XboxController getDriverController() { return this.DRIVER_CONTROLLER; }

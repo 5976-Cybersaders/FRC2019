@@ -7,29 +7,29 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.cscore.VideoSink;
-import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import frc.robot.subsystems.limelight.Limelight;
+
+import frc.robot.commands.climbcommands.ClimbDoNothingCommand;
 
 /**
  * Add your docs here.
  */
-public class CameraSubsystem extends Subsystem {
-  // Put methods for controlling this subsystem
-  // here. Call these from Commands.
-  private Limelight limelight;
+public class ClimbSubsystem extends Subsystem {
 
-  public CameraSubsystem() {
-    limelight = new Limelight();
+  private DoubleSolenoid front;
+  private DoubleSolenoid back;
+
+  public ClimbSubsystem(){
+    this.front = new DoubleSolenoid(0, 1); //TODO: verify channel numbers on PCM for these args, insert into RobotMap
+    this.back = new DoubleSolenoid(2, 3);
   }
 
   @Override
   public void initDefaultCommand() {
+    setDefaultCommand(new ClimbDoNothingCommand(this));
   }
-  
-  public Limelight getLimelight() { return limelight; }
+
+  public DoubleSolenoid getFrontDoubleSolenoid() { return this.front; }
+  public DoubleSolenoid getBackDoubleSolenoid() { return this.back; }
 }

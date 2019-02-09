@@ -7,17 +7,19 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.DoNothingCommand;
+import frc.robot.commands.BurnInDoNothingCommand;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.drivetraincommands.GearBoxBurnCommand;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.CargoIntakeSubsystem;
+import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveTrainBurnInSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -45,6 +47,8 @@ public class Robot extends TimedRobot {
   private HatchControlSubsystem hatchControlSubsystem;
   private CameraSubsystem cameraSubsystem;
 
+  private ClimbSubsystem climbSubsystem;
+
   private Command burnInCommand;
 
   private int counter = 0;
@@ -57,6 +61,9 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     m_oi = new OI(this);
     counter = 0;
+
+    m_oi = new OI(this);
+
     // chooser.addOption("My Auto", new MyAutoCommand());
     //this.driveTrainBurnIn = new DriveTrainBurnInSubsystem(RobotMap.leftTalonPort, RobotMap.rightTalonPort);
     //this.liftSubsystem = new LiftSubsystem(m_oi);
@@ -64,6 +71,7 @@ public class Robot extends TimedRobot {
     //this.cargoIntakeSubsystem = new CargoIntakeSubsystem(m_oi);
     this.cameraSubsystem = new CameraSubsystem(0, 1); // TODO: change CameraSubsystem constructor
     //this.driveTrain = new DriveTrainSubsystem(m_oi);
+    //this.climbSubsystem = new ClimbSubsystem();
 
     m_oi.bindButtons(this);
 
@@ -170,6 +178,7 @@ public class Robot extends TimedRobot {
   public CargoIntakeSubsystem getCargoIntakeSubsystem() { return this.cargoIntakeSubsystem; }
   public HatchControlSubsystem getHatchControlSubsystem() { return this.hatchControlSubsystem; }
   public CameraSubsystem getCameraSubsystem() { return this.cameraSubsystem; }
+  public ClimbSubsystem getClimbSubsystem() { return this.climbSubsystem; }
 
   class BurnCommandGroup extends CommandGroup {
     int runTimeSeconds = 20;
@@ -206,7 +215,7 @@ public class Robot extends TimedRobot {
     SingleStepBurnCommandGroup(double speed, int runSeconds){
       int waitSeconds = runSeconds * 2;
       this.addSequential(new GearBoxBurnCommand(driveTrainBurnIn, speed, runSeconds));
-      this.addSequential(new DoNothingCommand(driveTrainBurnIn, waitSeconds));
+      this.addSequential(new BurnInDoNothingCommand(driveTrainBurnIn, waitSeconds));
     }
   }
 }

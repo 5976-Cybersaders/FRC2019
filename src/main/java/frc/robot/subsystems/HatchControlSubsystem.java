@@ -22,7 +22,7 @@ public class HatchControlSubsystem extends Subsystem {
   private Servo servo;
 
   public HatchControlSubsystem(){
-    this.servo = new Servo(RobotMap.HATCH_SERVO_ID);
+    //this.servo = new Servo(RobotMap.HATCH_SERVO_ID);
   }
 
   @Override

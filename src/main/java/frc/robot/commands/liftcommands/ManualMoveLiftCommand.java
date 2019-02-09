@@ -39,7 +39,7 @@ public class ManualMoveLiftCommand extends Command {
   }
 
   // TODO: decide if this is necessary
-  // TODO: do we need an encoder on the lift?
+  // TODO: do we need an encoder on the lift? yes
   private double adjustSpeed(double speed){
     return Math.abs(speed) < 0.1 ? 0 : speed;
   }
@@ -59,5 +59,6 @@ public class ManualMoveLiftCommand extends Command {
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    InitLiftTalonCommand.isInitialized = false;
   }
 }
