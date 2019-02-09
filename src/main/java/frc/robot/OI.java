@@ -52,7 +52,6 @@ public class OI {
   private final XboxController SECONDARY_CONTROLLER = new XboxController(1);
 
   private XBoxButton switchCamera1;
-  private XBoxButton switchCamera2;
 
   private XBoxButton liftToLowCargo;
   private XBoxButton liftToMiddleCargo;
@@ -63,26 +62,23 @@ public class OI {
 
 
   public OI(Robot robot){
+    System.out.println("We made it to the OI bois :)");
     this.switchCamera1 = new XBoxButton(DRIVER_CONTROLLER, RawButton.X);
-    this.switchCamera2 = new XBoxButton(DRIVER_CONTROLLER, RawButton.Y);
-
-    this.switchCamera1.whenPressed(new SwitchCameraCommand(robot.getCameraSubsystem(), robot.getCameraSubsystem().getCamera1()));
-    this.switchCamera2.whenPressed(new SwitchCameraCommand(robot.getCameraSubsystem(), robot.getCameraSubsystem().getCamera2()));
-
     this.liftToLowCargo = new XBoxButton(SECONDARY_CONTROLLER, RawButton.X);
     this.liftToMiddleCargo = new XBoxButton(SECONDARY_CONTROLLER, RawButton.Y);
     this.liftToLowHatch = new XBoxButton(SECONDARY_CONTROLLER, RawButton.A);
-
-    this.liftToLowCargo.whenPressed(RaiseLiftCommand.RaiseLiftToLowCargo(robot.getLiftSubsystem()));
-    this.liftToMiddleCargo.whenPressed(RaiseLiftCommand.RaiseLiftToMiddleCargo(robot.getLiftSubsystem()));
-    this.liftToLowHatch.whenPressed(RaiseLiftCommand.RaiseLiftToLowHatch(robot.getLiftSubsystem()));
-
     this.grabHatch = new XBoxButton(SECONDARY_CONTROLLER, RawButton.LB);
     this.deliverHatch = new XBoxButton(SECONDARY_CONTROLLER, RawButton.RB);
+    System.out.println("Adios amigos :(");
+  }
 
-    this.grabHatch.whenPressed(new GrabHatchCommand(robot.getHatchControlSubsystem()));
-    this.deliverHatch.whenPressed(new DeliverHatchCommand(robot.getHatchControlSubsystem()));
-
+  public void bindButtons(Robot robot){
+    //this.liftToLowCargo.whenPressed(RaiseLiftCommand.RaiseLiftToLowCargo(robot.getLiftSubsystem()));
+    //this.liftToMiddleCargo.whenPressed(RaiseLiftCommand.RaiseLiftToMiddleCargo(robot.getLiftSubsystem()));
+    //this.liftToLowHatch.whenPressed(RaiseLiftCommand.RaiseLiftToLowHatch(robot.getLiftSubsystem()));
+    this.switchCamera1.whenPressed(new SwitchCameraCommand(robot.getCameraSubsystem()));
+    //this.grabHatch.whenPressed(new GrabHatchCommand(robot.getHatchControlSubsystem()));
+    //this.deliverHatch.whenPressed(new DeliverHatchCommand(robot.getHatchControlSubsystem()));
 
   }
 

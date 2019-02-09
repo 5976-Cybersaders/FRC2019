@@ -32,7 +32,7 @@ import frc.robot.subsystems.LiftSubsystem;
  * project.
  */
 public class Robot extends TimedRobot {
-  public static ExampleSubsystem m_subsystem = new ExampleSubsystem();
+  //public static ExampleSubsystem m_subsystem = new ExampleSubsystem();
   public static OI m_oi;
 
   Command m_autonomousCommand;
@@ -55,18 +55,19 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    m_oi = new OI(this);
     counter = 0;
     // chooser.addOption("My Auto", new MyAutoCommand());
-    this.driveTrainBurnIn = new DriveTrainBurnInSubsystem(RobotMap.leftTalonPort, RobotMap.rightTalonPort);
-    this.driveTrain = new DriveTrainSubsystem(m_oi);
-    this.liftSubsystem = new LiftSubsystem(m_oi);
-    this.hatchControlSubsystem = new HatchControlSubsystem();
-    this.cargoIntakeSubsystem = new CargoIntakeSubsystem(m_oi);
+    //this.driveTrainBurnIn = new DriveTrainBurnInSubsystem(RobotMap.leftTalonPort, RobotMap.rightTalonPort);
+    //this.liftSubsystem = new LiftSubsystem(m_oi);
+    //this.hatchControlSubsystem = new HatchControlSubsystem();
+    //this.cargoIntakeSubsystem = new CargoIntakeSubsystem(m_oi);
     this.cameraSubsystem = new CameraSubsystem(0, 1); // TODO: change CameraSubsystem constructor
+    //this.driveTrain = new DriveTrainSubsystem(m_oi);
 
-    m_oi = new OI(this);
+    m_oi.bindButtons(this);
 
-    m_chooser.setDefaultOption("Default Auto", new ExampleCommand(driveTrainBurnIn));
+    //m_chooser.setDefaultOption("Default Auto", new ExampleCommand(driveTrainBurnIn));
     SmartDashboard.putData("Auto mode", m_chooser);
   }
 
@@ -151,8 +152,8 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     counter++;
     if (this.burnInCommand == null && counter > 10){
-      this.burnInCommand = new BurnCommandGroup();
-      this.burnInCommand.start();
+      // this.burnInCommand = new BurnCommandGroup();
+      // this.burnInCommand.start();
     }
     Scheduler.getInstance().run();
   }

@@ -7,52 +7,42 @@
 
 package frc.robot.commands.cameracommands;
 
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.InstantCommand;
 import frc.robot.subsystems.CameraSubsystem;
+import frc.robot.subsystems.limelight.ControlMode.CamMode;
+import frc.robot.subsystems.limelight.ControlMode.LedMode;
+import frc.robot.subsystems.limelight.ControlMode.StreamType;
 
-public class SwitchCameraCommand extends Command {
+public class SwitchCameraCommand extends InstantCommand {
 
   private CameraSubsystem cameraSubsystem;
-  private UsbCamera nextCamera;
-  private Boolean activated;
 
-  public SwitchCameraCommand(CameraSubsystem cameras, UsbCamera nextCamera) { //TODO: cleanup
+  public SwitchCameraCommand(CameraSubsystem cameras) {
     this.cameraSubsystem = cameras;
-    this.nextCamera = nextCamera;
     requires(cameras);
-    setInterruptible(true);
   }
 
-  // Called just before this Command runs the first time
-  @Override
-  protected void initialize() {
-    this.activated = false;
+  public StreamType getNextStreamMode() {
+    switch(this.cameraSubsystem.getLimelight().getStream()) {
+      case kPiPMain:
+      this.cameraSubsystem.getLimelight().setCamMode(CamMode.kvision);
+      this.cameraSubsystem.getLimelight().setLEDMode(LedMode.kforceOn);
+        return StreamType.kPiPSecondary;
+      case kPiPSecondary:
+      this.cameraSubsystem.getLimelight().setCamMode(CamMode.kvision);
+      this.cameraSubsystem.getLimelight().setLEDMode(LedMode.kforceOn);
+        return StreamType.kStandard;
+      case kStandard:
+        this.cameraSubsystem.getLimelight().setCamMode(CamMode.kdriver);
+        this.cameraSubsystem.getLimelight().setLEDMode(LedMode.kforceOff);
+        return StreamType.kPiPMain;
+    }
+    return StreamType.kPiPMain;
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if (!this.activated) {
-      this.cameraSubsystem.getVideoSink().setSource(nextCamera);
-      this.activated = true;
-    } 
-  }
-
-  // Make this return true when this Command no longer needs to run execute()
-  @Override
-  protected boolean isFinished() {
-    return false;
-  }
-
-  // Called once after isFinished returns true
-  @Override
-  protected void end() {
-  }
-
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
+    this.cameraSubsystem.getLimelight().setStream(this.getNextStreamMode());
   }
 }
