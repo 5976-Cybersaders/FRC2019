@@ -25,6 +25,7 @@ public class CameraSubsystem extends Subsystem {
 
   public CameraSubsystem() {
     limelight = new Limelight();
+    System.out.println("Camera subsystem created with limelight " + limelight);
   }
 
   @Override

@@ -84,16 +84,17 @@ public class OI {
 
   public void bindButtons(Robot robot){
     this.switchCamera1.whenPressed(new SwitchCameraCommand(robot.getCameraSubsystem()));
+    System.out.println("camera button bound");
     
-    this.liftToLowCargo.whenPressed(RaiseLiftToFixedPositionCommand.RaiseLiftToLowCargo(robot.getLiftSubsystem()));
-    this.liftToMiddleCargo.whenPressed(RaiseLiftToFixedPositionCommand.RaiseLiftToMiddleCargo(robot.getLiftSubsystem()));
-    this.liftToLowHatch.whenPressed(RaiseLiftToFixedPositionCommand.RaiseLiftToLowHatch(robot.getLiftSubsystem()));
+    //this.liftToLowCargo.whenPressed(RaiseLiftToFixedPositionCommand.RaiseLiftToLowCargo(robot.getLiftSubsystem()));
+    //this.liftToMiddleCargo.whenPressed(RaiseLiftToFixedPositionCommand.RaiseLiftToMiddleCargo(robot.getLiftSubsystem()));
+    //this.liftToLowHatch.whenPressed(RaiseLiftToFixedPositionCommand.RaiseLiftToLowHatch(robot.getLiftSubsystem()));
 
-    this.grabHatch.whenPressed(new GrabHatchCommand(robot.getHatchControlSubsystem()));
-    this.deliverHatch.whenPressed(new DeliverHatchCommand(robot.getHatchControlSubsystem()));
+    //this.grabHatch.whenPressed(new GrabHatchCommand(robot.getHatchControlSubsystem()));
+    //this.deliverHatch.whenPressed(new DeliverHatchCommand(robot.getHatchControlSubsystem()));
     
-    this.actuateFrontPiston.whenPressed(new ActuateFrontPistonCommand(robot.getClimbSubsystem()));
-    this.actuateBackPiston.whenPressed(new ActuateBackPistonCommand(robot.getClimbSubsystem()));
+    //this.actuateFrontPiston.whenPressed(new ActuateFrontPistonCommand(robot.getClimbSubsystem()));
+    //this.actuateBackPiston.whenPressed(new ActuateBackPistonCommand(robot.getClimbSubsystem()));
   }
 
   public XboxController getDriverController() { return this.DRIVER_CONTROLLER; }

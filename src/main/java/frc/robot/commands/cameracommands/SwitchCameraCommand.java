@@ -43,6 +43,8 @@ public class SwitchCameraCommand extends InstantCommand {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    this.cameraSubsystem.getLimelight().setStream(this.getNextStreamMode());
+    StreamType type = this.getNextStreamMode();
+    this.cameraSubsystem.getLimelight().setStream(type);
+    System.out.println("switching to mode " + type);
   }
 }
