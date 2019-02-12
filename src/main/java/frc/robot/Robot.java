@@ -61,11 +61,6 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     m_oi = new OI(this);
     counter = 0;
-
-    m_oi = new OI(this);
-
-    // chooser.addOption("My Auto", new MyAutoCommand());
-    //this.driveTrainBurnIn = new DriveTrainBurnInSubsystem(RobotMap.leftTalonPort, RobotMap.rightTalonPort);
     //this.liftSubsystem = new LiftSubsystem(m_oi);
     //this.hatchControlSubsystem = new HatchControlSubsystem();
     //this.cargoIntakeSubsystem = new CargoIntakeSubsystem(m_oi);
@@ -131,6 +126,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.start();
     }
+    this.cameraSubsystem.initLimelight();
   }
 
   /**
@@ -151,6 +147,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     this.burnInCommand = null;
+    this.cameraSubsystem.initLimelight();
   }
 
   /**

@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.SpeedControllerGroup;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.OI;
 import frc.robot.RobotMap;
@@ -24,7 +25,9 @@ public class DriveTrainSubsystem extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
+  private static double expoFactor = 0.2;
   private WPI_TalonSRX leftMaster, leftSlave, rightMaster, rightSlave;
+  private SpeedControllerGroup leftSide, rightSide;
   private List<WPI_TalonSRX> rightTalons;
   private List<WPI_TalonSRX> leftTalons;
 
@@ -36,6 +39,9 @@ public class DriveTrainSubsystem extends Subsystem {
     this.leftSlave = new WPI_TalonSRX(RobotMap.LEFT_SLAVE_TALON_ID);
     this.rightMaster = new WPI_TalonSRX(RobotMap.RIGHT_MASTER_TALON_ID);
     this.rightSlave = new WPI_TalonSRX(RobotMap.RIGHT_SLAVE_TALON_ID);
+
+    leftSide = new SpeedControllerGroup(leftMaster, leftSlave);
+    rightSide = new SpeedControllerGroup(rightMaster, rightSlave);
 
     leftTalons = Arrays.asList(this.leftMaster, this.leftSlave);
     rightTalons = Arrays.asList(this.rightMaster, this.rightSlave);
@@ -59,8 +65,21 @@ public class DriveTrainSubsystem extends Subsystem {
      });
   }
 
+  public void drive(double leftSpeed, double rightSpeed) {
+    leftSide.set(adjustSpeed(leftSpeed));
+    rightSide.set(adjustSpeed(rightSpeed));
+  }
+
+  private double adjustSpeed(double d) {
+    if (Math.abs(d) < 0.03) return 0;
+    return Math.signum(d) * Math.pow(Math.abs(d), Math.pow(4, expoFactor));
+  }
+
   public WPI_TalonSRX getLeftMaster() { return this.leftMaster; }
   public WPI_TalonSRX getLeftSlave() { return this.leftSlave; }
   public WPI_TalonSRX getRightMaster() { return this.rightMaster; }
   public WPI_TalonSRX getRightSlave() { return this.rightSlave; }
+  
+  public SpeedControllerGroup getLeftSide() { return this.leftSide; }
+  public SpeedControllerGroup getRightSide() { return this.rightSide; }
 }

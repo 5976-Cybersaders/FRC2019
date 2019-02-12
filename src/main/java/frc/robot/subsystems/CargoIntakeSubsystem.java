@@ -7,7 +7,7 @@
 
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.OI;
@@ -19,11 +19,11 @@ import frc.robot.commands.cargointakecommands.CargoIntakeCommand;
  */
 public class CargoIntakeSubsystem extends Subsystem {
 
-  private WPI_TalonSRX talon;
+  private WPI_VictorSPX talon;
   private OI oi;
 
   public CargoIntakeSubsystem(OI oi){
-    this.talon = new WPI_TalonSRX(RobotMap.INTAKE_TALON_ID);
+    this.talon = new WPI_VictorSPX(RobotMap.INTAKE_TALON_ID);
     this.oi = oi;
   }
 
@@ -32,7 +32,7 @@ public class CargoIntakeSubsystem extends Subsystem {
     setDefaultCommand(new CargoIntakeCommand(this.oi.getDriverController(), this));
   }
 
-  public WPI_TalonSRX getTalon(){
+  public WPI_VictorSPX getTalon(){
     return this.talon;
   }
 }

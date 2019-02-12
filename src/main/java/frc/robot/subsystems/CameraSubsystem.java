@@ -14,6 +14,9 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import frc.robot.subsystems.limelight.Limelight;
+import frc.robot.subsystems.limelight.ControlMode.CamMode;
+import frc.robot.subsystems.limelight.ControlMode.LedMode;
+import frc.robot.subsystems.limelight.ControlMode.StreamType;
 
 /**
  * Add your docs here.
@@ -26,6 +29,12 @@ public class CameraSubsystem extends Subsystem {
   public CameraSubsystem() {
     limelight = new Limelight();
     System.out.println("Camera subsystem created with limelight " + limelight);
+  }
+
+  public void initLimelight(){
+    this.limelight.setCamMode(CamMode.kdriver);
+    this.limelight.setLEDMode(LedMode.kforceOff);
+    this.limelight.setStream(StreamType.kPiPMain);
   }
 
   @Override

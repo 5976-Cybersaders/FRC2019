@@ -8,6 +8,7 @@
 package frc.robot.commands.cargointakecommands;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.command.Command;
@@ -17,7 +18,7 @@ import frc.robot.subsystems.CargoIntakeSubsystem;
 public class CargoIntakeCommand extends Command {
 
   private XboxController controller;
-  private WPI_TalonSRX talon;
+  private WPI_VictorSPX talon;
 
   public CargoIntakeCommand(XboxController controller, CargoIntakeSubsystem cargoIntakeSubsystem) {
     this.controller = controller;

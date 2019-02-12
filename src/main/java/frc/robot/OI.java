@@ -13,6 +13,7 @@ import frc.robot.XBoxButton.RawButton;
 import frc.robot.commands.cameracommands.SwitchCameraCommand;
 import frc.robot.commands.climbcommands.ActuateBackPistonCommand;
 import frc.robot.commands.climbcommands.ActuateFrontPistonCommand;
+import frc.robot.commands.drivetraincommands.VisionDriveCommandGroup;
 import frc.robot.commands.hatchcommands.DeliverHatchCommand;
 import frc.robot.commands.hatchcommands.GrabHatchCommand;
 import frc.robot.commands.liftcommands.RaiseLiftToFixedPositionCommand;
@@ -65,6 +66,10 @@ public class OI {
   private XBoxButton actuateFrontPiston;
   private XBoxButton actuateBackPiston;
 
+  private XBoxButton visionDrive;
+
+  private XBoxTrigger cargoIntake;
+
 
   public OI(Robot robot){
     System.out.println("We made it to the OI bois :)");
@@ -76,6 +81,7 @@ public class OI {
     this.deliverHatch = new XBoxButton(SECONDARY_CONTROLLER, RawButton.RB);
     this.actuateFrontPiston = new XBoxButton(SECONDARY_CONTROLLER, RawButton.RB);
     this.actuateBackPiston = new XBoxButton(SECONDARY_CONTROLLER, RawButton.LB);
+    this.visionDrive = new XBoxButton(DRIVER_CONTROLLER, RawButton.B);
     System.out.println("Adios amigos :(");
   }
 
@@ -84,6 +90,7 @@ public class OI {
 
   public void bindButtons(Robot robot){
     this.switchCamera1.whenPressed(new SwitchCameraCommand(robot.getCameraSubsystem()));
+    this.visionDrive.whileHeld(new VisionDriveCommandGroup(robot.getDriveTrain(), robot.getCameraSubsystem(), DRIVER_CONTROLLER));
     System.out.println("camera button bound");
     
     //this.liftToLowCargo.whenPressed(RaiseLiftToFixedPositionCommand.RaiseLiftToLowCargo(robot.getLiftSubsystem()));

@@ -25,16 +25,10 @@ public class SwitchCameraCommand extends InstantCommand {
   public StreamType getNextStreamMode() {
     switch(this.cameraSubsystem.getLimelight().getStream()) {
       case kPiPMain:
-      this.cameraSubsystem.getLimelight().setCamMode(CamMode.kvision);
-      this.cameraSubsystem.getLimelight().setLEDMode(LedMode.kforceOn);
         return StreamType.kPiPSecondary;
       case kPiPSecondary:
-      this.cameraSubsystem.getLimelight().setCamMode(CamMode.kvision);
-      this.cameraSubsystem.getLimelight().setLEDMode(LedMode.kforceOn);
         return StreamType.kStandard;
       case kStandard:
-        this.cameraSubsystem.getLimelight().setCamMode(CamMode.kdriver);
-        this.cameraSubsystem.getLimelight().setLEDMode(LedMode.kforceOff);
         return StreamType.kPiPMain;
     }
     return StreamType.kPiPMain;
@@ -46,5 +40,6 @@ public class SwitchCameraCommand extends InstantCommand {
     StreamType type = this.getNextStreamMode();
     this.cameraSubsystem.getLimelight().setStream(type);
     System.out.println("switching to mode " + type);
+    System.out.println("Stream latency" + this.cameraSubsystem.getLimelight().getPipelineLatency());
   }
 }
