@@ -70,6 +70,11 @@ public class DriveTrainSubsystem extends Subsystem {
     rightSide.set(adjustSpeed(rightSpeed));
   }
 
+  public void visionDrive(double leftSpeed, double rightSpeed) {
+    leftSide.set(leftSpeed);
+    rightSide.set(rightSpeed);
+  }
+
   private double adjustSpeed(double d) {
     if (Math.abs(d) < 0.03) return 0;
     return Math.signum(d) * Math.pow(Math.abs(d), Math.pow(4, expoFactor));

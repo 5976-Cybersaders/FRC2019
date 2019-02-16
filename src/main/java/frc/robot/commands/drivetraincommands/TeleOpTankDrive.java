@@ -44,7 +44,9 @@ public class TeleOpTankDrive extends Command {
     @Override
     protected void execute() {
         // Negative below is intentional to reverse direction of joystick input.
-        this.driveTrain.drive(-controller.getY(Hand.kLeft), -controller.getY(Hand.kRight));
+        double left = -controller.getY(Hand.kLeft);
+        double right = -controller.getY(Hand.kRight);
+        this.driveTrain.drive(left, right);
         reportExecute();
     }
 

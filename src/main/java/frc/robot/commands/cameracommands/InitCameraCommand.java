@@ -19,7 +19,7 @@ import frc.robot.subsystems.limelight.ControlMode.StreamType;
  */
 public class InitCameraCommand extends InstantCommand {
   /**
-   * Add your docs here.
+   * Add your docs here. TODO: remove these if we aren't going to use them
    */
   private Limelight limelight;
   private CamMode camMode;

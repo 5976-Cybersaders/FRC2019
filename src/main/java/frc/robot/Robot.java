@@ -64,8 +64,9 @@ public class Robot extends TimedRobot {
     //this.liftSubsystem = new LiftSubsystem(m_oi);
     //this.hatchControlSubsystem = new HatchControlSubsystem();
     //this.cargoIntakeSubsystem = new CargoIntakeSubsystem(m_oi);
-    this.cameraSubsystem = new CameraSubsystem(); // TODO: change CameraSubsystem constructor
     this.driveTrain = new DriveTrainSubsystem(m_oi);
+    this.cameraSubsystem = new CameraSubsystem(); // TODO: change CameraSubsystem constructor
+    
     //this.climbSubsystem = new ClimbSubsystem();
 
     m_oi.bindButtons(this);

@@ -13,7 +13,7 @@ import frc.robot.XBoxButton.RawButton;
 import frc.robot.commands.cameracommands.SwitchCameraCommand;
 import frc.robot.commands.climbcommands.ActuateBackPistonCommand;
 import frc.robot.commands.climbcommands.ActuateFrontPistonCommand;
-import frc.robot.commands.drivetraincommands.VisionDriveCommandGroup;
+import frc.robot.commands.drivetraincommands.VisionDriveCommand;
 import frc.robot.commands.hatchcommands.DeliverHatchCommand;
 import frc.robot.commands.hatchcommands.GrabHatchCommand;
 import frc.robot.commands.liftcommands.RaiseLiftToFixedPositionCommand;
@@ -90,7 +90,7 @@ public class OI {
 
   public void bindButtons(Robot robot){
     this.switchCamera1.whenPressed(new SwitchCameraCommand(robot.getCameraSubsystem()));
-    this.visionDrive.whileHeld(new VisionDriveCommandGroup(robot.getDriveTrain(), robot.getCameraSubsystem(), DRIVER_CONTROLLER));
+    this.visionDrive.whileHeld(new VisionDriveCommand(robot.getDriveTrain(), robot.getCameraSubsystem(), DRIVER_CONTROLLER));
     System.out.println("camera button bound");
     
     //this.liftToLowCargo.whenPressed(RaiseLiftToFixedPositionCommand.RaiseLiftToLowCargo(robot.getLiftSubsystem()));
