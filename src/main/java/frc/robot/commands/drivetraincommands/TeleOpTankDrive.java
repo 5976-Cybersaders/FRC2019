@@ -36,6 +36,7 @@ public class TeleOpTankDrive extends Command {
 
     @Override
     protected void initialize() {
+        System.out.println("Drive train starting...");
         driveTrain.invertMotors();
         initTalon(leftMaster);
         initTalon(rightMaster);

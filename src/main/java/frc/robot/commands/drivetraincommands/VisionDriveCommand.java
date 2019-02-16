@@ -10,6 +10,7 @@ package frc.robot.commands.drivetraincommands;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import frc.robot.SmartDashboardMap;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.limelight.Limelight;
@@ -24,6 +25,9 @@ public class VisionDriveCommand extends Command {
   private Limelight limelight;
   private XboxController controller;
   private int counter;
+  private double deadband;
+  private double kp;
+  private double min_cmd;
 
   public VisionDriveCommand(DriveTrainSubsystem driveTrainSubsystem, CameraSubsystem cameraSubsystem, XboxController controller) {
     this.driveTrainSubsystem = driveTrainSubsystem;
@@ -39,32 +43,36 @@ public class VisionDriveCommand extends Command {
   protected void initialize() {
     this.initCameraSettings(CamMode.kvision, LedMode.kforceOn, StreamType.kPiPSecondary);
     this.counter = 0;
+    this.deadband = SmartDashboardMap.VISION_DEADBAND.getValue();
+    this.kp = SmartDashboardMap.VISION_KP.getValue();
+    this.min_cmd = SmartDashboardMap.VISION_MIN_CMD.getValue();
+    System.out.println("Deadband: "  + deadband);
+    System.out.println("KP: "  + kp);
+    System.out.println("Minimum command: "  + min_cmd);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    double kp = -0.05; //TODO: adjust kp
-    double min_cmd = 0.17;
     double tx = limelight.getdegRotationToTarget();
     double headingError = -tx;
     double steerAdjust = 0;
 
-    if (tx > 3.0){
+    if (tx > deadband){
       steerAdjust = kp * headingError - min_cmd;
       counter = 0;
-    } else if (tx < -3.0){
+    } else if (tx < -deadband){
       steerAdjust = kp * headingError + min_cmd;
       counter = 0;
     } else {
       counter++;
     }
     // double speed = Math.pow((tx/27), 3);
-    double leftStick = controller.getY(Hand.kLeft);
-    double rightStick = controller.getY(Hand.kRight);
-    double leftSpeed =(leftStick+ steerAdjust); //tx < 0 ? speed : 0;
+    double leftStick = -controller.getY(Hand.kLeft);
+    double rightStick = -controller.getY(Hand.kRight);
+    double leftSpeed = (leftStick + steerAdjust); //tx < 0 ? speed : 0;
     double rightSpeed = (rightStick - steerAdjust); // tx > 0 ? speed: 0;
-    System.out.println("Vision Drive\nLeft Speed: " + leftSpeed + " | Right Speed: " + rightSpeed + " | tx: " + tx + " | Steer adjust: " + steerAdjust + " | Left joystick: " + leftStick + " | Right joystick: " + rightStick);
+    System.out.println("Vision Drive\nLeft: " + leftSpeed + " | Right: " + rightSpeed + " | tx: " + tx + " | Steer: " + steerAdjust + " | Left joystick: " + leftStick + " | Right joystick: " + rightStick);
     this.driveTrainSubsystem.visionDrive(leftSpeed, rightSpeed);
   }
 
@@ -91,5 +99,8 @@ public class VisionDriveCommand extends Command {
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
+    System.out.println("Interrupted, starting end");
+    end();
+    System.out.println("Ended");
   }
 }

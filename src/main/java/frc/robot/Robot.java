@@ -59,6 +59,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    SmartDashboardMap.reportAll();
     m_oi = new OI(this);
     counter = 0;
     //this.liftSubsystem = new LiftSubsystem(m_oi);
