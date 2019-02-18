@@ -9,18 +9,20 @@ package frc.robot.commands.climbcommands;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.command.InstantCommand;
+
+import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.subsystems.ClimbSubsystem;
 
 /**
  * Add your docs here.
  */
-public abstract class ActuatePistonCommand extends InstantCommand {
+public abstract class ActuatePistonCommand extends Command {
   /**
    * Add your docs here.
    */
 
   private DoubleSolenoid doubleSolenoid;
+  private boolean pistonIsForward;
 
   public ActuatePistonCommand(ClimbSubsystem climbSubsystem, DoubleSolenoid doubleSolenoid) {
     // Use requires() here to declare subsystem dependencies
@@ -32,18 +34,28 @@ public abstract class ActuatePistonCommand extends InstantCommand {
   // Called once when the command executes
   @Override
   protected void initialize() {
+    pistonIsForward = false;
   }
 
-  @Override
   protected void execute(){
-    if (DriverStation.getInstance().getMatchTime() < 30){
-      if (doubleSolenoid.get().equals(DoubleSolenoid.Value.kForward)){
-        doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
-      } 
-      else {
-        doubleSolenoid.set(DoubleSolenoid.Value.kForward);
-      }
+    if (!pistonIsForward) {
+      doubleSolenoid.set(DoubleSolenoid.Value.kForward);
+      pistonIsForward = true;
     }
   }
 
+  @Override
+  protected void end() {
+    doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
+  }
+
+  @Override
+  protected void interrupted() {
+    end();
+  }
+
+  protected boolean isFinished() {
+    return false;
+  }
+  
 }
