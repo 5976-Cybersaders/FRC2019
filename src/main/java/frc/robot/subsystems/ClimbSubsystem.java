@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -19,10 +20,13 @@ public class ClimbSubsystem extends Subsystem {
 
   private DoubleSolenoid front;
   private DoubleSolenoid back;
+  private Compressor compressor;
 
   public ClimbSubsystem(){
     this.front = new DoubleSolenoid(0, 1); //TODO: verify channel numbers on PCM for these args, insert into RobotMap
     this.back = new DoubleSolenoid(2, 3);
+    compressor = new Compressor();
+    compressor.setClosedLoopControl(true);
   }
 
   @Override

@@ -70,8 +70,14 @@ public class VisionDriveCommand extends Command {
     // double speed = Math.pow((tx/27), 3);
     double leftStick = -controller.getY(Hand.kLeft);
     double rightStick = -controller.getY(Hand.kRight);
-    double leftSpeed = (leftStick + steerAdjust); //tx < 0 ? speed : 0;
-    double rightSpeed = (rightStick - steerAdjust); // tx > 0 ? speed: 0;
+    double leftSpeed = leftStick;
+    double rightSpeed = rightStick;
+    if (Math.abs(leftStick) < 0.1) {
+      leftSpeed += steerAdjust; //tx < 0 ? speed : 0;
+    } 
+    if (Math.abs(rightStick) < 0.1) {
+      rightSpeed -= steerAdjust; //tx < 0 ? speed : 0;
+    } 
     System.out.println("Vision Drive\nLeft: " + leftSpeed + " | Right: " + rightSpeed + " | tx: " + tx + " | Steer: " + steerAdjust + " | Left joystick: " + leftStick + " | Right joystick: " + rightStick);
     this.driveTrainSubsystem.visionDrive(leftSpeed, rightSpeed);
   }

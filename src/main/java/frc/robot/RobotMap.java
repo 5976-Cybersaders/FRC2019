@@ -33,5 +33,5 @@ public class RobotMap {
 
   public static int LIFT_TALON_ID = 5;
 
-  public static int INTAKE_TALON_ID = 6;
+  public static int INTAKE_TALON_ID = 0;
 }

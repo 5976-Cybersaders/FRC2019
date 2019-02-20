@@ -39,7 +39,6 @@ public class SwitchCameraCommand extends InstantCommand {
   protected void execute() {
     StreamType type = this.getNextStreamMode();
     this.cameraSubsystem.getLimelight().setStream(type);
-    System.out.println("switching to mode " + type);
-    System.out.println("Stream latency" + this.cameraSubsystem.getLimelight().getPipelineLatency());
+    System.out.println("\n\nSwitching LimeLight to mode " + type + "\n\n");
   }
 }

@@ -10,6 +10,7 @@ package frc.robot.commands.cargointakecommands;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
@@ -18,7 +19,7 @@ import frc.robot.subsystems.CargoIntakeSubsystem;
 public class CargoIntakeCommand extends Command {
 
   private XboxController controller;
-  private WPI_VictorSPX talon;
+  private Talon talon;
 
   public CargoIntakeCommand(XboxController controller, CargoIntakeSubsystem cargoIntakeSubsystem) {
     this.controller = controller;
@@ -34,9 +35,11 @@ public class CargoIntakeCommand extends Command {
   // left trigger goes backwards, right trigger goes forwards
   @Override
   protected void execute() {
-    double speed = this.controller.getTriggerAxis(Hand.kLeft) > this.controller.getTriggerAxis(Hand.kRight) ? 
-      -this.controller.getTriggerAxis(Hand.kLeft) :
-      this.controller.getTriggerAxis(Hand.kRight);
+    double rightTrigger = this.controller.getTriggerAxis(Hand.kRight);
+    double leftTrigger = this.controller.getTriggerAxis(Hand.kLeft);
+    double speed = leftTrigger > rightTrigger ? 
+      -leftTrigger :
+      rightTrigger;
     this.talon.set(adjustSpeed(speed));
   }
 
@@ -49,6 +52,7 @@ public class CargoIntakeCommand extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    
   }
 
   // Called when another command which requires one or more of the same
@@ -58,6 +62,6 @@ public class CargoIntakeCommand extends Command {
   }
 
   private double adjustSpeed(double speed){
-    return speed < 0.05 ? 0 : speed;
+    return Math.abs(speed) < 0.05 ? 0 : speed;
   }
 }

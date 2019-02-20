@@ -20,7 +20,7 @@ public class RaiseLiftToFixedPositionCommand extends MoveLiftCommand {
   }
 
   public static RaiseLiftToFixedPositionCommand RaiseLiftToMiddleCargo(LiftSubsystem liftSubsystem){
-    return new RaiseLiftToFixedPositionCommand(liftSubsystem, 48, 10);
+    return new RaiseLiftToFixedPositionCommand(liftSubsystem, 40, 10);
   }
 
   public static RaiseLiftToFixedPositionCommand RaiseLiftToLowHatch(LiftSubsystem liftSubsystem){

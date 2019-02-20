@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.BurnInDoNothingCommand;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.cargointakecommands.DeployCargoIntakeCommand;
 import frc.robot.commands.drivetraincommands.GearBoxBurnCommand;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.CargoIntakeSubsystem;
@@ -59,21 +60,24 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    System.out.println("****** BEGIN ROBOT INIT ******");
     SmartDashboardMap.reportAll();
     m_oi = new OI(this);
     counter = 0;
-    //this.liftSubsystem = new LiftSubsystem(m_oi);
+    this.liftSubsystem = new LiftSubsystem(m_oi);
     //this.hatchControlSubsystem = new HatchControlSubsystem();
-    //this.cargoIntakeSubsystem = new CargoIntakeSubsystem(m_oi);
+    this.cargoIntakeSubsystem = new CargoIntakeSubsystem(m_oi);
     this.driveTrain = new DriveTrainSubsystem(m_oi);
     this.cameraSubsystem = new CameraSubsystem(); // TODO: change CameraSubsystem constructor
     
-    //this.climbSubsystem = new ClimbSubsystem();
+    this.climbSubsystem = new ClimbSubsystem();
 
     m_oi.bindButtons(this);
 
     //m_chooser.setDefaultOption("Default Auto", new ExampleCommand(driveTrainBurnIn));
     SmartDashboard.putData("Auto mode", m_chooser);
+
+    System.out.println("****** END ROBOT INIT ******");
   }
 
   /**
@@ -116,6 +120,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_chooser.getSelected();
+    //m_autonomousCommand = new DeployCargoIntakeCommand(cargoIntakeSubsystem); //TODO: does this do what it's supposed to?
 
     /*
      * String autoSelected = SmartDashboard.getString("Auto Selector",

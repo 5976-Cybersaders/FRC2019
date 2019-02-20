@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.XBoxButton.RawButton;
 
 import frc.robot.commands.cameracommands.SwitchCameraCommand;
+import frc.robot.commands.cargointakecommands.DeployCargoIntakeCommand;
+import frc.robot.commands.cargointakecommands.RetractCargoIntakeCommand;
 import frc.robot.commands.climbcommands.ActuateBackPistonCommand;
 import frc.robot.commands.climbcommands.ActuateFrontPistonCommand;
 import frc.robot.commands.drivetraincommands.VisionDriveCommand;
@@ -55,33 +57,36 @@ public class OI {
   private final XboxController SECONDARY_CONTROLLER = new XboxController(1);
 
   private XBoxButton switchCamera1;
-
   private XBoxButton liftToLowCargo;
   private XBoxButton liftToMiddleCargo;
   private XBoxButton liftToLowHatch;
-
   private XBoxButton grabHatch;
   private XBoxButton deliverHatch;
-
   private XBoxButton actuateFrontPiston;
   private XBoxButton actuateBackPiston;
-
   private XBoxButton visionDrive;
-
-  private XBoxTrigger cargoIntake;
-
+  private XBoxButton deployCargoIntakeControl;
+  private XBoxButton retractCargoIntakeControl;
 
   public OI(Robot robot){
     System.out.println("We made it to the OI bois :)");
+    
+    // Note -- the sticks on the DRIVER_CONTROLLER are used by the TeleOpDriveCommand
+    // Note -- the triggers on the DRIVER_CONTROLLER are used by the CargoIntakeCommand
     this.switchCamera1 = new XBoxButton(DRIVER_CONTROLLER, RawButton.X);
+    this.visionDrive = new XBoxButton(DRIVER_CONTROLLER, RawButton.B);
+    this.actuateFrontPiston = new XBoxButton(DRIVER_CONTROLLER, RawButton.RB);
+    this.actuateBackPiston = new XBoxButton(DRIVER_CONTROLLER, RawButton.LB);
+
+    // Note -- the sticks on the SECONDARY_CONTROLLER are used by the ManualMoveLiftCommand
     this.liftToLowCargo = new XBoxButton(SECONDARY_CONTROLLER, RawButton.X);
     this.liftToMiddleCargo = new XBoxButton(SECONDARY_CONTROLLER, RawButton.Y);
     this.liftToLowHatch = new XBoxButton(SECONDARY_CONTROLLER, RawButton.A);
-    this.grabHatch = new XBoxButton(SECONDARY_CONTROLLER, RawButton.LB); //TODO: remove hatch code
-    this.deliverHatch = new XBoxButton(SECONDARY_CONTROLLER, RawButton.RB);
-    this.actuateFrontPiston = new XBoxButton(SECONDARY_CONTROLLER, RawButton.RB);
-    this.actuateBackPiston = new XBoxButton(SECONDARY_CONTROLLER, RawButton.LB);
-    this.visionDrive = new XBoxButton(DRIVER_CONTROLLER, RawButton.B);
+    deployCargoIntakeControl = new XBoxButton(SECONDARY_CONTROLLER, RawButton.RB);
+    retractCargoIntakeControl = new XBoxButton(SECONDARY_CONTROLLER, RawButton.LB);
+    //this.grabHatch = new XBoxButton(SECONDARY_CONTROLLER, RawButton.LB); //TODO: remove hatch code
+    //this.deliverHatch = new XBoxButton(SECONDARY_CONTROLLER, RawButton.RB);
+
     System.out.println("Adios amigos :(");
   }
 
@@ -89,19 +94,22 @@ public class OI {
   }
 
   public void bindButtons(Robot robot){
+    System.out.println("*** Binding buttons ***");
+    
     this.switchCamera1.whenPressed(new SwitchCameraCommand(robot.getCameraSubsystem()));
     this.visionDrive.whileHeld(new VisionDriveCommand(robot.getDriveTrain(), robot.getCameraSubsystem(), DRIVER_CONTROLLER));
-    System.out.println("camera button bound");
+    this.actuateFrontPiston.whileHeld(new ActuateFrontPistonCommand(robot.getClimbSubsystem()));
+    this.actuateBackPiston.whileHeld(new ActuateBackPistonCommand(robot.getClimbSubsystem()));
     
-    //this.liftToLowCargo.whenPressed(RaiseLiftToFixedPositionCommand.RaiseLiftToLowCargo(robot.getLiftSubsystem()));
-    //this.liftToMiddleCargo.whenPressed(RaiseLiftToFixedPositionCommand.RaiseLiftToMiddleCargo(robot.getLiftSubsystem()));
-    //this.liftToLowHatch.whenPressed(RaiseLiftToFixedPositionCommand.RaiseLiftToLowHatch(robot.getLiftSubsystem()));
-
+    this.liftToLowCargo.whenPressed(RaiseLiftToFixedPositionCommand.RaiseLiftToLowCargo(robot.getLiftSubsystem()));
+    this.liftToMiddleCargo.whenPressed(RaiseLiftToFixedPositionCommand.RaiseLiftToMiddleCargo(robot.getLiftSubsystem()));
+    this.liftToLowHatch.whenPressed(RaiseLiftToFixedPositionCommand.RaiseLiftToLowHatch(robot.getLiftSubsystem()));
+    deployCargoIntakeControl.whenPressed(new DeployCargoIntakeCommand(robot.getCargoIntakeSubsystem()));
+    retractCargoIntakeControl.whenPressed(new RetractCargoIntakeCommand(robot.getCargoIntakeSubsystem()));
     //this.grabHatch.whenPressed(new GrabHatchCommand(robot.getHatchControlSubsystem()));
     //this.deliverHatch.whenPressed(new DeliverHatchCommand(robot.getHatchControlSubsystem()));
-    
-    //this.actuateFrontPiston.whenPressed(new ActuateFrontPistonCommand(robot.getClimbSubsystem()));
-    //this.actuateBackPiston.whenPressed(new ActuateBackPistonCommand(robot.getClimbSubsystem()));
+
+    System.out.println("*** Buttons bound ***");
   }
 
   public XboxController getDriverController() { return this.DRIVER_CONTROLLER; }

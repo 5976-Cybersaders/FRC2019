@@ -46,6 +46,9 @@ public class SmartDashboardMap {
     public static final JudanValue POSITION = makeValue("Position", "RIGHT");
     public static final JudanValue DELAY = makeValue("Delay (Seconds)", 0);
 
+    public static final JudanValue LIFT_ENCODER_POSITION = makeValue("Lift Encoder Position", -1);
+    public static final JudanValue LIFT_SPEED = makeValue("Lift Speed", -1);
+
     // Vision
     public static final JudanValue VISION_DEADBAND = makeValue("Vision_Deadband", 3.0);
     public static final JudanValue VISION_KP = makeValue("Vision_KP", -0.1);

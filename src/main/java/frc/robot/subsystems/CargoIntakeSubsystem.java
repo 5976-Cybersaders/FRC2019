@@ -9,6 +9,8 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import frc.robot.OI;
 import frc.robot.RobotMap;
@@ -19,11 +21,13 @@ import frc.robot.commands.cargointakecommands.CargoIntakeCommand;
  */
 public class CargoIntakeSubsystem extends Subsystem {
 
-  private WPI_VictorSPX talon;
+  private DoubleSolenoid doubleSolenoid; 
+  private Talon talon;
   private OI oi;
 
   public CargoIntakeSubsystem(OI oi){
-    this.talon = new WPI_VictorSPX(RobotMap.INTAKE_TALON_ID);
+    this.doubleSolenoid =new DoubleSolenoid(4,5); 
+    this.talon = new Talon(RobotMap.INTAKE_TALON_ID);
     this.oi = oi;
   }
 
@@ -32,7 +36,12 @@ public class CargoIntakeSubsystem extends Subsystem {
     setDefaultCommand(new CargoIntakeCommand(this.oi.getDriverController(), this));
   }
 
-  public WPI_VictorSPX getTalon(){
+  public Talon getTalon(){
     return this.talon;
   }
+
+  public DoubleSolenoid getDoubleSolenoid(){
+    return this.doubleSolenoid;
+  }
+   
 }

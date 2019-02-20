@@ -33,7 +33,7 @@ public class InitLiftTalonCommand extends InstantCommand {
     if (talon == null) return;
 
     talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute, 0, 0);
-    //talon.setSelectedSensorPosition(0, 0, 0); //TODO: Get Lift start height in ticks
+    talon.setSelectedSensorPosition(0, 0, 0); //TODO: Get Lift start height in ticks
     talon.setSensorPhase(true);
     talon.setInverted(true);
 

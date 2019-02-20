@@ -48,4 +48,12 @@ public class JudanValue {
     public String getString() {
         return SmartDashboard.getString(key, defaultString);
     }
+
+    public void putString(String value) {
+        SmartDashboard.putString(key, value);
+    }
+
+    public void putNumber(double value) {
+        SmartDashboard.putNumber(key, value);
+    }
 }

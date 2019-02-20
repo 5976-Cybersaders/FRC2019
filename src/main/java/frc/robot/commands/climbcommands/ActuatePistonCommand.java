@@ -28,7 +28,7 @@ public abstract class ActuatePistonCommand extends Command {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     this.doubleSolenoid = doubleSolenoid;
-    requires( climbSubsystem);
+    requires(climbSubsystem);
   }
 
   // Called once when the command executes
@@ -41,12 +41,14 @@ public abstract class ActuatePistonCommand extends Command {
     if (!pistonIsForward) {
       doubleSolenoid.set(DoubleSolenoid.Value.kForward);
       pistonIsForward = true;
+      //System.out.println(getClass().getSimpleName() + " moving piston Forward");
     }
   }
 
   @Override
   protected void end() {
     doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
+    //System.out.println(getClass().getSimpleName() + " moving piston Reverse");
   }
 
   @Override

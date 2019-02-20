@@ -12,12 +12,17 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.SmartDashboardMap;
 import frc.robot.subsystems.LiftSubsystem;
 
 public class ManualMoveLiftCommand extends Command {
 
+  private static final int UPPER_LIMIT_TICKS = 20000;
+  private static final int LOWER_LIMIT_TICKS = 1;
+
   private WPI_TalonSRX talon;
   private XboxController controller;
+  private int counter = 0;
 
   public ManualMoveLiftCommand(LiftSubsystem liftSubsystem, XboxController controller) {
     this.talon = liftSubsystem.getTalon();
@@ -30,12 +35,45 @@ public class ManualMoveLiftCommand extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    this.talon.set(this.adjustSpeed(this.controller.getY(Hand.kLeft)));
+    int speedAdjustment = 4;
+    double rawSpeed = this.adjustSpeed(this.controller.getY(Hand.kLeft));
+    double adjustedSpeed = rawSpeed / speedAdjustment; 
+
+    if (this.talon.getSelectedSensorPosition() < LOWER_LIMIT_TICKS) {
+      if(adjustedSpeed > 0) {
+        this.talon.set(adjustedSpeed);
+      }
+      else {
+        this.talon.set(0);
+      }
+      System.out.println("Lift below lower limit");
+    }
+    else if (this.talon.getSelectedSensorPosition() > UPPER_LIMIT_TICKS){
+      if(adjustedSpeed < 0) {
+        this.talon.set(adjustedSpeed);
+      }
+      else {
+        this.talon.set(0);
+      }
+      System.out.println("Lift above upper limit");
+    }
+    else {
+      this.talon.set(adjustedSpeed);
+    }
+
+    //System.out.println("Manual Move Lift current position " + this.talon.getSelectedSensorPosition());
+    counter = (counter % 25) + 1;
+    if (counter == 25) { 
+      SmartDashboardMap.LIFT_ENCODER_POSITION.putNumber(this.talon.getSelectedSensorPosition());
+      SmartDashboardMap.LIFT_SPEED.putNumber(adjustedSpeed);
+      System.out.println("Raw: " + rawSpeed + " Adj: " + adjustedSpeed);
+    }
   }
 
   // TODO: decide if this is necessary
