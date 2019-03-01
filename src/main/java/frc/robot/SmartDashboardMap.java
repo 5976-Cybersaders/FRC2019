@@ -16,6 +16,7 @@ public class SmartDashboardMap {
     
     // Drive Talons
     private static final Vector<JudanValue> all = new Vector<>();
+    /*
     public static final JudanValue kPFL = makeValue("P-Value FL", 0.04);
     public static final JudanValue kIFL = makeValue("I-Value FL", 0);
     public static final JudanValue kDFL = makeValue("D-Value FL", 0.4);
@@ -34,6 +35,7 @@ public class SmartDashboardMap {
     public static final JudanValue NOMINAL_VOLTAGE = makeValue("Nominal Voltage", 0.25);
     public static final JudanValue RAMP_RATE = makeValue("Ramp Rate", 0);
     public static final JudanValue SIDE_INVERSION = makeValue("Inverted Side", "RIGHT");
+    */
 
     // Lift Encoders
     public static final JudanValue LIFT_kP = makeValue("P-Value Lift", 0.4);
@@ -42,9 +44,6 @@ public class SmartDashboardMap {
     public static final JudanValue LIFT_ALLOWABLE_ERROR = makeValue("Lift Allowable Error", 100);
     public static final JudanValue LIFT_PEAK_VOLTAGE = makeValue("Lift Peak Voltage", 1);
     public static final JudanValue LIFT_NOMINAL_VOLTAGE = makeValue("Lift Nominal Voltage", 0.6);
-
-    public static final JudanValue POSITION = makeValue("Position", "RIGHT");
-    public static final JudanValue DELAY = makeValue("Delay (Seconds)", 0);
 
     public static final JudanValue LIFT_ENCODER_POSITION = makeValue("Lift Encoder Position", -1);
     public static final JudanValue LIFT_SPEED = makeValue("Lift Speed", -1);

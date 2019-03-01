@@ -84,6 +84,7 @@ public class OI {
     this.liftToLowHatch = new XBoxButton(SECONDARY_CONTROLLER, RawButton.A);
     deployCargoIntakeControl = new XBoxButton(SECONDARY_CONTROLLER, RawButton.RB);
     retractCargoIntakeControl = new XBoxButton(SECONDARY_CONTROLLER, RawButton.LB);
+    
     //this.grabHatch = new XBoxButton(SECONDARY_CONTROLLER, RawButton.LB); //TODO: remove hatch code
     //this.deliverHatch = new XBoxButton(SECONDARY_CONTROLLER, RawButton.RB);
 
@@ -98,14 +99,15 @@ public class OI {
     
     this.switchCamera1.whenPressed(new SwitchCameraCommand(robot.getCameraSubsystem()));
     this.visionDrive.whileHeld(new VisionDriveCommand(robot.getDriveTrain(), robot.getCameraSubsystem(), DRIVER_CONTROLLER));
-    this.actuateFrontPiston.whileHeld(new ActuateFrontPistonCommand(robot.getClimbSubsystem()));
-    this.actuateBackPiston.whileHeld(new ActuateBackPistonCommand(robot.getClimbSubsystem()));
     
-    this.liftToLowCargo.whenPressed(RaiseLiftToFixedPositionCommand.RaiseLiftToLowCargo(robot.getLiftSubsystem()));
-    this.liftToMiddleCargo.whenPressed(RaiseLiftToFixedPositionCommand.RaiseLiftToMiddleCargo(robot.getLiftSubsystem()));
-    this.liftToLowHatch.whenPressed(RaiseLiftToFixedPositionCommand.RaiseLiftToLowHatch(robot.getLiftSubsystem()));
-    deployCargoIntakeControl.whenPressed(new DeployCargoIntakeCommand(robot.getCargoIntakeSubsystem()));
-    retractCargoIntakeControl.whenPressed(new RetractCargoIntakeCommand(robot.getCargoIntakeSubsystem()));
+    //this.actuateFrontPiston.whileHeld(new ActuateFrontPistonCommand(robot.getClimbSubsystem()));
+    //this.actuateBackPiston.whileHeld(new ActuateBackPistonCommand(robot.getClimbSubsystem()));
+    
+    //this.liftToLowCargo.whenPressed(RaiseLiftToFixedPositionCommand.RaiseLiftToLowCargo(robot.getLiftSubsystem()));
+    //this.liftToMiddleCargo.whenPressed(RaiseLiftToFixedPositionCommand.RaiseLiftToMiddleCargo(robot.getLiftSubsystem()));
+    //this.liftToLowHatch.whenPressed(RaiseLiftToFixedPositionCommand.RaiseLiftToLowHatch(robot.getLiftSubsystem()));
+    //deployCargoIntakeControl.whenPressed(new DeployCargoIntakeCommand(robot.getCargoIntakeSubsystem()));
+    //retractCargoIntakeControl.whenPressed(new RetractCargoIntakeCommand(robot.getCargoIntakeSubsystem()));
     //this.grabHatch.whenPressed(new GrabHatchCommand(robot.getHatchControlSubsystem()));
     //this.deliverHatch.whenPressed(new DeliverHatchCommand(robot.getHatchControlSubsystem()));
 

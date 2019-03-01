@@ -64,18 +64,15 @@ public class Robot extends TimedRobot {
     SmartDashboardMap.reportAll();
     m_oi = new OI(this);
     counter = 0;
-    this.liftSubsystem = new LiftSubsystem(m_oi);
+    //this.liftSubsystem = new LiftSubsystem(m_oi);
     //this.hatchControlSubsystem = new HatchControlSubsystem();
-    this.cargoIntakeSubsystem = new CargoIntakeSubsystem(m_oi);
+    //this.cargoIntakeSubsystem = new CargoIntakeSubsystem(m_oi);
     this.driveTrain = new DriveTrainSubsystem(m_oi);
     this.cameraSubsystem = new CameraSubsystem(); // TODO: change CameraSubsystem constructor
     
-    this.climbSubsystem = new ClimbSubsystem();
+    //this.climbSubsystem = new ClimbSubsystem();
 
     m_oi.bindButtons(this);
-
-    //m_chooser.setDefaultOption("Default Auto", new ExampleCommand(driveTrainBurnIn));
-    SmartDashboard.putData("Auto mode", m_chooser);
 
     System.out.println("****** END ROBOT INIT ******");
   }
