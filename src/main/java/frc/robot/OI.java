@@ -15,6 +15,7 @@ import frc.robot.commands.cargointakecommands.DeployCargoIntakeCommand;
 import frc.robot.commands.cargointakecommands.RetractCargoIntakeCommand;
 import frc.robot.commands.climbcommands.ActuateBackPistonCommand;
 import frc.robot.commands.climbcommands.ActuateFrontPistonCommand;
+import frc.robot.commands.drivetraincommands.HybridVisionDriveCommand;
 import frc.robot.commands.drivetraincommands.VisionDriveCommand;
 import frc.robot.commands.hatchcommands.DeliverHatchCommand;
 import frc.robot.commands.hatchcommands.GrabHatchCommand;
@@ -60,8 +61,10 @@ public class OI {
   private XBoxButton liftToLowCargo;
   private XBoxButton liftToMiddleCargo;
   private XBoxButton liftToLowHatch;
+
   private XBoxButton grabHatch;
   private XBoxButton deliverHatch;
+  
   private XBoxButton actuateFrontPiston;
   private XBoxButton actuateBackPiston;
   private XBoxButton visionDrive;

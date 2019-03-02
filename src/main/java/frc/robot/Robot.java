@@ -117,8 +117,6 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_chooser.getSelected();
-    //m_autonomousCommand = new DeployCargoIntakeCommand(cargoIntakeSubsystem); //TODO: does this do what it's supposed to?
-
     /*
      * String autoSelected = SmartDashboard.getString("Auto Selector",
      * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
@@ -131,6 +129,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.start();
     }
     this.cameraSubsystem.initLimelight();
+    liftSubsystem.initTalon();
   }
 
   /**
@@ -150,8 +149,9 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    this.burnInCommand = null;
-    this.cameraSubsystem.initLimelight();
+    burnInCommand = null;
+    cameraSubsystem.initLimelight();
+    liftSubsystem.initTalon();
   }
 
   /**

@@ -8,8 +8,8 @@
 package frc.robot.commands.drivetraincommands;
 
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
+import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.SmartDashboardMap;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
@@ -18,13 +18,12 @@ import frc.robot.subsystems.limelight.ControlMode.CamMode;
 import frc.robot.subsystems.limelight.ControlMode.LedMode;
 import frc.robot.subsystems.limelight.ControlMode.StreamType;
 
-
 public class VisionDriveCommand extends Command {
 
   private DriveTrainSubsystem driveTrainSubsystem;
   private Limelight limelight;
   private XboxController controller;
-  private int counter;
+  private int deadBandCounter;
   private double deadband;
   private double kp;
   private double min_cmd;
@@ -42,7 +41,7 @@ public class VisionDriveCommand extends Command {
   @Override
   protected void initialize() {
     this.initCameraSettings(CamMode.kvision, LedMode.kforceOn, StreamType.kPiPSecondary);
-    this.counter = 0;
+    this.deadBandCounter = 0;
     this.deadband = SmartDashboardMap.VISION_DEADBAND.getValue();
     this.kp = SmartDashboardMap.VISION_KP.getValue();
     this.min_cmd = SmartDashboardMap.VISION_MIN_CMD.getValue();
@@ -60,12 +59,12 @@ public class VisionDriveCommand extends Command {
 
     if (tx > deadband){
       steerAdjust = kp * headingError - min_cmd;
-      counter = 0;
+      deadBandCounter = 0;
     } else if (tx < -deadband){
       steerAdjust = kp * headingError + min_cmd;
-      counter = 0;
+      deadBandCounter = 0;
     } else {
-      counter++;
+      deadBandCounter++;
     }
     // double speed = Math.pow((tx/27), 3);
     double leftStick = -controller.getY(Hand.kLeft);
@@ -82,17 +81,10 @@ public class VisionDriveCommand extends Command {
     this.driveTrainSubsystem.visionDrive(leftSpeed, rightSpeed);
   }
 
-  private void initCameraSettings(CamMode camMode, LedMode ledMode, StreamType streamType){
-    this.limelight.setCamMode(camMode);
-    this.limelight.setLEDMode(ledMode);
-    this.limelight.setStream(streamType);
-  }
-
-  // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    System.out.println("Vision drive cmd counter: " + counter);
-    return counter >= 25;
+    System.out.println("Vision deadband drive cmd counter: " + getDeadBandCounter());
+    return getDeadBandCounter() >= 25;
   }
 
   // Called once after isFinished returns true
@@ -105,8 +97,16 @@ public class VisionDriveCommand extends Command {
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    System.out.println("Interrupted, starting end");
     end();
-    System.out.println("Ended");
   }
+
+  private void initCameraSettings(CamMode camMode, LedMode ledMode, StreamType streamType){
+    this.limelight.setCamMode(camMode);
+    this.limelight.setLEDMode(ledMode);
+    this.limelight.setStream(streamType);
+  }
+
+  protected int getDeadBandCounter() { return this.deadBandCounter; }
+  protected DriveTrainSubsystem getDriveTrainSubsystem() { return this.driveTrainSubsystem; }
+  protected XboxController getXboxController() { return this.controller; }
 }

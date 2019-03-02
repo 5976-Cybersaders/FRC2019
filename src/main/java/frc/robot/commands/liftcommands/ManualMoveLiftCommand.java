@@ -97,6 +97,5 @@ public class ManualMoveLiftCommand extends Command {
   // subsystems is scheduled to run
   @Override
   protected void interrupted() {
-    InitLiftTalonCommand.isInitialized = false;
   }
 }
