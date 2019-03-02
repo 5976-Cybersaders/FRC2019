@@ -27,11 +27,13 @@ public class VisionDriveCommand extends Command {
   private double deadband;
   private double kp;
   private double min_cmd;
+  private int txCounter;
 
   public VisionDriveCommand(DriveTrainSubsystem driveTrainSubsystem, CameraSubsystem cameraSubsystem, XboxController controller) {
     this.driveTrainSubsystem = driveTrainSubsystem;
     this.limelight = cameraSubsystem.getLimelight();
     this.controller = controller;
+    txCounter = 0;
     requires(driveTrainSubsystem);
     requires(cameraSubsystem);
     setInterruptible(true);
@@ -40,7 +42,7 @@ public class VisionDriveCommand extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    this.initCameraSettings(CamMode.kvision, LedMode.kforceOn, StreamType.kPiPSecondary);
+    this.initCameraSettings(CamMode.kvision, LedMode.kforceOn, StreamType.kPiPMain); //TODO: determine stream type once second camera is plugged in
     this.deadBandCounter = 0;
     this.deadband = SmartDashboardMap.VISION_DEADBAND.getValue();
     this.kp = SmartDashboardMap.VISION_KP.getValue();
@@ -54,9 +56,13 @@ public class VisionDriveCommand extends Command {
   @Override
   protected void execute() {
     double tx = limelight.getdegRotationToTarget();
+    txCounter++;
+    if (txCounter >= 25) { 
+      SmartDashboardMap.VISION_TX.putNumber(tx);
+      txCounter = 0;
+    }
     double headingError = -tx;
     double steerAdjust = 0;
-
     if (tx > deadband){
       steerAdjust = kp * headingError - min_cmd;
       deadBandCounter = 0;
@@ -69,14 +75,8 @@ public class VisionDriveCommand extends Command {
     // double speed = Math.pow((tx/27), 3);
     double leftStick = -controller.getY(Hand.kLeft);
     double rightStick = -controller.getY(Hand.kRight);
-    double leftSpeed = leftStick;
-    double rightSpeed = rightStick;
-    if (Math.abs(leftStick) < 0.1) {
-      leftSpeed += steerAdjust; //tx < 0 ? speed : 0;
-    } 
-    if (Math.abs(rightStick) < 0.1) {
-      rightSpeed -= steerAdjust; //tx < 0 ? speed : 0;
-    } 
+    double leftSpeed = (leftStick + steerAdjust); //tx < 0 ? speed : 0;
+    double rightSpeed = (rightStick - steerAdjust); // tx > 0 ? speed: 0;
     System.out.println("Vision Drive\nLeft: " + leftSpeed + " | Right: " + rightSpeed + " | tx: " + tx + " | Steer: " + steerAdjust + " | Left joystick: " + leftStick + " | Right joystick: " + rightStick);
     this.driveTrainSubsystem.visionDrive(leftSpeed, rightSpeed);
   }

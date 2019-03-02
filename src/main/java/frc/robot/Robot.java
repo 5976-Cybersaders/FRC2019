@@ -129,7 +129,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.start();
     }
     this.cameraSubsystem.initLimelight();
-    liftSubsystem.initTalon();
+    //liftSubsystem.initTalon(); TODO: uncomment this for production code
   }
 
   /**
@@ -151,7 +151,7 @@ public class Robot extends TimedRobot {
     }
     burnInCommand = null;
     cameraSubsystem.initLimelight();
-    liftSubsystem.initTalon();
+    //liftSubsystem.initTalon(); TODO: uncomment this for production code
   }
 
   /**
