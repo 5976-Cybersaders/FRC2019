@@ -55,6 +55,8 @@ public class SmartDashboardMap {
     public static final JudanValue VISION_CONTROL_COUNT = makeValue("Vision control count", 1);
     public static final JudanValue VISION_DRIVER_CONTROL_COUNT = makeValue("Vision_Driver control count", 1);
     public static final JudanValue VISION_TX = makeValue("Vision_tx", 90);
+    public static final JudanValue VISION_STICK_DEADBAND = makeValue("Vision_stick deadband", 0.10);
+    public static final JudanValue VISION_TX_BEFORE_CORRECTION = makeValue("Vision_tx before correction", 90);
 
     //debug
 

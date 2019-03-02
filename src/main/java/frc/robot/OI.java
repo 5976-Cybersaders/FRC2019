@@ -17,6 +17,7 @@ import frc.robot.commands.climbcommands.ActuateBackPistonCommand;
 import frc.robot.commands.climbcommands.ActuateFrontPistonCommand;
 import frc.robot.commands.drivetraincommands.HybridVisionDriveCommand;
 import frc.robot.commands.drivetraincommands.VisionDriveCommand;
+import frc.robot.commands.drivetraincommands.VisionDriveWIthAutoCorrectAndDriveStraight;
 import frc.robot.commands.hatchcommands.DeliverHatchCommand;
 import frc.robot.commands.hatchcommands.GrabHatchCommand;
 import frc.robot.commands.liftcommands.RaiseLiftToFixedPositionCommand;
@@ -101,7 +102,7 @@ public class OI {
     System.out.println("*** Binding buttons ***");
     
     this.switchCamera1.whenPressed(new SwitchCameraCommand(robot.getCameraSubsystem()));
-    this.visionDrive.whileHeld(new VisionDriveCommand(robot.getDriveTrain(), robot.getCameraSubsystem(), DRIVER_CONTROLLER));
+    this.visionDrive.whileHeld(new VisionDriveWIthAutoCorrectAndDriveStraight(robot.getDriveTrain(), robot.getCameraSubsystem(), DRIVER_CONTROLLER));
     
     //this.actuateFrontPiston.whileHeld(new ActuateFrontPistonCommand(robot.getClimbSubsystem()));
     //this.actuateBackPiston.whileHeld(new ActuateBackPistonCommand(robot.getClimbSubsystem()));
