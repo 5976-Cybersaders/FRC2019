@@ -51,12 +51,16 @@ public class SmartDashboardMap {
     // Vision
     public static final JudanValue VISION_DEADBAND = makeValue("Vision_Deadband", 1.5);
     public static final JudanValue VISION_KP = makeValue("Vision_KP", -0.025);
-    public static final JudanValue VISION_MIN_CMD = makeValue("Vision_Min_Cmd", -0.1);
+    public static final JudanValue VISION_MIN_CMD = makeValue("Vision_Min_Cmd", -0.2); // previously -0.1
     public static final JudanValue VISION_CONTROL_COUNT = makeValue("Vision control count", 1);
     public static final JudanValue VISION_DRIVER_CONTROL_COUNT = makeValue("Vision_Driver control count", 1);
     public static final JudanValue VISION_TX = makeValue("Vision_tx", 90);
     public static final JudanValue VISION_STICK_DEADBAND = makeValue("Vision_stick deadband", 0.10);
     public static final JudanValue VISION_TX_BEFORE_CORRECTION = makeValue("Vision_tx before correction", 90);
+    public static final JudanValue VISION_OVER_DRIVE_FACTOR = makeValue("Vision Overdrive", .15);
+    public static final JudanValue VISION_LEFT_SPEED = makeValue("Vision left speed", 0);
+    public static final JudanValue VISION_RIGHT_SPEED = makeValue("Vision right speed", 0);
+
 
     //debug
 
