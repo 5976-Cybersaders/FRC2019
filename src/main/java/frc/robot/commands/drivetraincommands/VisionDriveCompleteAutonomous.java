@@ -18,7 +18,7 @@ import frc.robot.subsystems.limelight.ControlMode.CamMode;
 import frc.robot.subsystems.limelight.ControlMode.LedMode;
 import frc.robot.subsystems.limelight.ControlMode.StreamType;
 
-public class VisionDriveWIthAutoCorrectAndDriveStraight extends Command {
+public class VisionDriveCompleteAutonomous extends Command {
 
   private DriveTrainSubsystem driveTrainSubsystem;
   private Limelight limelight;
@@ -28,11 +28,14 @@ public class VisionDriveWIthAutoCorrectAndDriveStraight extends Command {
   private double kp;
   private double min_cmd;
   private int txCounter;
+  private boolean shouldWeGoLeft;
+  private boolean isSnapMode;
 
   private VisionCommandData commandData = new VisionCommandData();
 
-  public VisionDriveWIthAutoCorrectAndDriveStraight(DriveTrainSubsystem driveTrainSubsystem, CameraSubsystem cameraSubsystem, XboxController controller) {
+  public VisionDriveCompleteAutonomous(DriveTrainSubsystem driveTrainSubsystem, CameraSubsystem cameraSubsystem, XboxController controller, boolean shouldWeGoLeft) {
     this.driveTrainSubsystem = driveTrainSubsystem;
+    this.shouldWeGoLeft = shouldWeGoLeft;
     this.limelight = cameraSubsystem.getLimelight();
     this.controller = controller;
     requires(driveTrainSubsystem);
@@ -49,10 +52,7 @@ public class VisionDriveWIthAutoCorrectAndDriveStraight extends Command {
     this.kp = SmartDashboardMap.VISION_KP.getValue();
     this.min_cmd = SmartDashboardMap.VISION_MIN_CMD.getValue();
     txCounter = 25; // so that it is reported on the first iteration
-    commandData.setWasUserControl(true);
-    commandData.setTxBeforeCorrection(90);
-    commandData.setFirstTxBeforeCorrection(90);
-    SmartDashboardMap.VISION_TX_BEFORE_CORRECTION.putNumber(commandData.getTxBeforeCorrection());
+    this.isSnapMode = true;
     System.out.println("Deadband: "  + deadband);
     System.out.println("KP: "  + kp);
     System.out.println("Minimum command: "  + min_cmd);
@@ -72,23 +72,34 @@ public class VisionDriveWIthAutoCorrectAndDriveStraight extends Command {
           ELSE go snap(), then handleAutonomousControl()
     */
 
+    /*
+      starting position <-- *initialize*
+      while (ta < 11) { <-- *execute start*
+        correct angle //  correcting mode
+        while (Math.abs(tx) < 22) {
+          drive towards center line // driving mode
+        }
+      } <-- *execute end*
+    */
+      if(txCounter == 25) {
+        commandData.report();
+        txCounter = 0;
+      } else {
+        txCounter++;
+      }
 
     commandData.refresh();
-    if(commandData.getTv()) {
-      reportData();
-      if (commandData.shouldSnap()){
-        commandData.snap();
-      }
-      if (commandData.isUserControl()){
-        handleUserControl();
-      } else {
-        handleAutonomousControl();
-      }
-      commandData.report();
-      this.driveTrainSubsystem.visionDrive(commandData.getLeftSpeed(), commandData.getRightSpeed());
+    determineMode();
+    if(isSnapMode) {
+      handleSnapMode();
     } else {
-      //TODO: Do something mayyyyyyyyyyybbbbbbbbbbbeeeeeeeeee ;)
-      SmartDashboardMap.VISION_TX.putNumber(90);
+      handleDriveMode();
+    }
+    if(commandData.getTa() < 12) {
+      driveTrainSubsystem.visionDrive(commandData.getLeftSpeed(), commandData.getRightSpeed());
+    } else {
+      driveTrainSubsystem.visionDrive(0, 0);
+
     }
   }
 
@@ -120,32 +131,33 @@ public class VisionDriveWIthAutoCorrectAndDriveStraight extends Command {
     SmartDashboardMap.VISION_TX.putNumber(commandData.getTx());
   }
 
-  private void handleUserControl(){
-    commandData.setWasUserControl(true);
-    //If command is entered with user control true on first iteration we should snap because in the normal case we only snap when not in user control
-    if (commandData.getTxBeforeCorrection() > 89){
-      commandData.snap();
-    }
-    if (Math.abs(commandData.getLeftStick()) > SmartDashboardMap.VISION_STICK_DEADBAND.getDouble()){
-      getDriveTrainSubsystem().drive(commandData.getLeftStick(), commandData.getLeftStick()); // drive straight w/ one stick
-    } else {
-      if (Math.abs(commandData.getTx()) < 20){ // prevent steering out of range of LL
-        if (commandData.getFirstTxBeforeCorrection() > 0){
-          commandData.setLeftSpeed(commandData.getRightStick());
-          commandData.setRightSpeed(commandData.getRightStick() * SmartDashboardMap.VISION_OVER_DRIVE_FACTOR.getDouble());
-        } else {
-          commandData.setLeftSpeed(commandData.getRightStick() * SmartDashboardMap.VISION_OVER_DRIVE_FACTOR.getDouble());
-          commandData.setRightSpeed(commandData.getRightStick());
-        }
+  public void determineMode() {
+    if(isSnapMode) {
+      if(deadBandCounter >= 25) {
+        deadBandCounter = 0;
+        isSnapMode = false;
       }
+    } else {
+      isSnapMode = Math.abs(commandData.getTx()) >= 20;
     }
   }
 
-  private void handleAutonomousControl(){
-    if (Math.abs(commandData.getTxBeforeCorrection()) < 0.00000001){
-      return;
+  private void handleDriveMode(){
+    //If command is entered with user control true on first iteration we should snap because in the normal case we only snap when not in user control
+    double speed = 0.257;
+    double lesserSpeed = speed * SmartDashboardMap.VISION_OVER_DRIVE_FACTOR.getDouble();
+      if (Math.abs(commandData.getTx()) < 20){ // prevent steering out of range of LL
+        if (!shouldWeGoLeft){
+          commandData.setLeftSpeed(speed);
+          commandData.setRightSpeed(lesserSpeed);
+        } else {
+          commandData.setLeftSpeed(lesserSpeed);
+          commandData.setRightSpeed(speed);
+        }
+      }
     }
-    commandData.setWasUserControl(false);
+
+  private void handleSnapMode(){
     double headingError = -commandData.getTx();
     if (commandData.getTx() > deadband){
       commandData.setSteerAdjust(kp * headingError - min_cmd);
@@ -156,8 +168,8 @@ public class VisionDriveWIthAutoCorrectAndDriveStraight extends Command {
     } else {
       deadBandCounter++;
     }
-    commandData.setLeftSpeed(commandData.getLeftStick() + commandData.getSteerAdjust()); //tx < 0 ? speed : 0;
-    commandData.setRightSpeed(commandData.getRightStick() - commandData.getSteerAdjust()); // tx > 0 ? speed: 0;
+    commandData.setLeftSpeed(commandData.getSteerAdjust()); //tx < 0 ? speed : 0;
+    commandData.setRightSpeed(-commandData.getSteerAdjust()); // tx > 0 ? speed: 0;
 
   }
 
@@ -168,62 +180,28 @@ public class VisionDriveWIthAutoCorrectAndDriveStraight extends Command {
 
 
   private class VisionCommandData {
-    double leftStick;
-    double rightStick;
     double tx;
     boolean tv;
-    double txBeforeCorrection = 0;
-    double firstTxBeforeCorrection = 90;
+    double ta;
     double leftSpeed;
     double rightSpeed;
     double steerAdjust;
-    boolean isUserControl;
-    boolean wasUserControl = true;
 
     public void refresh() {
-      leftStick = -controller.getY(Hand.kLeft);
-      rightStick = -controller.getY(Hand.kRight);
       tx = limelight.getdegRotationToTarget();
       tv = limelight.getIsTargetFound();
+      ta = limelight.getTargetArea();
       leftSpeed = 0;
       rightSpeed = 0;
       steerAdjust = 0;
-      isUserControl = Math.abs(rightStick) > SmartDashboardMap.VISION_STICK_DEADBAND.getDouble() || Math.abs(leftStick) > SmartDashboardMap.VISION_STICK_DEADBAND.getDouble();
     }
 
-    public boolean shouldSnap(){
-      return wasUserControl && !isUserControl;
-    }
 
-    public void snap(){
-      txBeforeCorrection = tx;
-      SmartDashboardMap.VISION_TX_BEFORE_CORRECTION.putNumber(txBeforeCorrection);
-      SmartDashboardMap.VISION_FIRST_TX_BEFORE_CORRECTION.putNumber(firstTxBeforeCorrection);
-      if (Math.abs(firstTxBeforeCorrection) > 89){
-        firstTxBeforeCorrection = txBeforeCorrection;
-      }
-    }
 
     public void report(){
       SmartDashboardMap.VISION_LEFT_SPEED.putNumber(leftSpeed);
       SmartDashboardMap.VISION_RIGHT_SPEED.putNumber(rightSpeed);
-      System.out.println("Vision Drive\nLeft: " + leftSpeed + " | Right: " + rightSpeed + " | tx: " + tx + " | Steer: " + steerAdjust + " | Left joystick: " + leftStick + " | Right joystick: " + rightStick + " | isUserControl: " + isUserControl + " | txBeforeCorrection: " + txBeforeCorrection);
-    }
-
-    public double getLeftStick() {
-      return leftStick;
-    }
-
-    public void setLeftStick(double leftStick) {
-      this.leftStick = leftStick;
-    }
-
-    public double getRightStick() {
-      return rightStick;
-    }
-
-    public void setRightStick(double rightStick) {
-      this.rightStick = rightStick;
+      System.out.println("Vision Drive\nLeft: " + leftSpeed + " | Right: " + rightSpeed + " | tx: " + tx + " | Steer: " + steerAdjust + " | Deadband counter: " + deadBandCounter + " | isSnapMode: " + isSnapMode + " | Ta: " + commandData.getTa());
     }
 
     public double getTx() {
@@ -232,22 +210,6 @@ public class VisionDriveWIthAutoCorrectAndDriveStraight extends Command {
 
     public void setTx(double tx) {
       this.tx = tx;
-    }
-
-    public double getTxBeforeCorrection(){
-      return this.txBeforeCorrection;
-    }
-
-    public void setTxBeforeCorrection(double txBeforeCorrection){
-      this.txBeforeCorrection = txBeforeCorrection;
-    }
-
-    public double getFirstTxBeforeCorrection(){
-      return firstTxBeforeCorrection;
-    }
-
-    public void setFirstTxBeforeCorrection(double firstTxBeforeCorrection){
-      this.firstTxBeforeCorrection = firstTxBeforeCorrection;
     }
  
     public double getLeftSpeed() {
@@ -274,20 +236,12 @@ public class VisionDriveWIthAutoCorrectAndDriveStraight extends Command {
       this.steerAdjust = steerAdjust;
     }
 
-    public boolean isUserControl() {
-      return isUserControl;
-    }
-
-    public void setIsUserContorl(boolean isUserControl) {
-      this.isUserControl = isUserControl;
-    }
-
-    public void setWasUserControl(boolean wasUserControl){
-      this.wasUserControl = wasUserControl;
-    }
-
     public boolean getTv() {
       return this.tv;
+    }
+
+    public double getTa() {
+      return this.ta;
     }
   }
 

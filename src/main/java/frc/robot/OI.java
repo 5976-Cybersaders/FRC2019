@@ -17,6 +17,8 @@ import frc.robot.commands.climbcommands.ActuateBackPistonCommand;
 import frc.robot.commands.climbcommands.ActuateFrontPistonCommand;
 import frc.robot.commands.drivetraincommands.HybridVisionDriveCommand;
 import frc.robot.commands.drivetraincommands.VisionDriveCommand;
+import frc.robot.commands.drivetraincommands.VisionDriveCompleteAutonomous;
+import frc.robot.commands.drivetraincommands.VisionDriveConSelectedSide;
 import frc.robot.commands.drivetraincommands.VisionDriveWIthAutoCorrectAndDriveStraight;
 import frc.robot.commands.hatchcommands.DeliverHatchCommand;
 import frc.robot.commands.hatchcommands.GrabHatchCommand;
@@ -69,6 +71,7 @@ public class OI {
   private XBoxButton actuateFrontPiston;
   private XBoxButton actuateBackPiston;
   private XBoxButton visionDrive;
+  private XBoxButton visionDriveLeft;
   private XBoxButton deployCargoIntakeControl;
   private XBoxButton retractCargoIntakeControl;
 
@@ -79,6 +82,7 @@ public class OI {
     // Note -- the triggers on the DRIVER_CONTROLLER are used by the CargoIntakeCommand
     this.switchCamera1 = new XBoxButton(DRIVER_CONTROLLER, RawButton.X);
     this.visionDrive = new XBoxButton(DRIVER_CONTROLLER, RawButton.B);
+    this.visionDriveLeft = new XBoxButton(DRIVER_CONTROLLER, RawButton.Y);
     this.actuateFrontPiston = new XBoxButton(DRIVER_CONTROLLER, RawButton.RB);
     this.actuateBackPiston = new XBoxButton(DRIVER_CONTROLLER, RawButton.LB);
 
@@ -102,7 +106,8 @@ public class OI {
     System.out.println("*** Binding buttons ***");
     
     this.switchCamera1.whenPressed(new SwitchCameraCommand(robot.getCameraSubsystem()));
-    this.visionDrive.whileHeld(new VisionDriveWIthAutoCorrectAndDriveStraight(robot.getDriveTrain(), robot.getCameraSubsystem(), DRIVER_CONTROLLER));
+    this.visionDrive.whileHeld(new VisionDriveCompleteAutonomous(robot.getDriveTrain(), robot.getCameraSubsystem(), DRIVER_CONTROLLER, false));
+    this.visionDriveLeft.whileHeld(new VisionDriveCompleteAutonomous(robot.getDriveTrain(), robot.getCameraSubsystem(), DRIVER_CONTROLLER, true));
     
     //this.actuateFrontPiston.whileHeld(new ActuateFrontPistonCommand(robot.getClimbSubsystem()));
     //this.actuateBackPiston.whileHeld(new ActuateBackPistonCommand(robot.getClimbSubsystem()));

@@ -18,7 +18,7 @@ import frc.robot.subsystems.limelight.ControlMode.CamMode;
 import frc.robot.subsystems.limelight.ControlMode.LedMode;
 import frc.robot.subsystems.limelight.ControlMode.StreamType;
 
-public class VisionDriveWIthAutoCorrectAndDriveStraight extends Command {
+public class VisionDriveConSelectedSide extends Command {
 
   private DriveTrainSubsystem driveTrainSubsystem;
   private Limelight limelight;
@@ -28,11 +28,13 @@ public class VisionDriveWIthAutoCorrectAndDriveStraight extends Command {
   private double kp;
   private double min_cmd;
   private int txCounter;
+  private boolean shouldWeGoLeft;
 
   private VisionCommandData commandData = new VisionCommandData();
 
-  public VisionDriveWIthAutoCorrectAndDriveStraight(DriveTrainSubsystem driveTrainSubsystem, CameraSubsystem cameraSubsystem, XboxController controller) {
+  public VisionDriveConSelectedSide(DriveTrainSubsystem driveTrainSubsystem, CameraSubsystem cameraSubsystem, XboxController controller, boolean shouldWeGoLeft) {
     this.driveTrainSubsystem = driveTrainSubsystem;
+    this.shouldWeGoLeft = shouldWeGoLeft;
     this.limelight = cameraSubsystem.getLimelight();
     this.controller = controller;
     requires(driveTrainSubsystem);
@@ -130,7 +132,7 @@ public class VisionDriveWIthAutoCorrectAndDriveStraight extends Command {
       getDriveTrainSubsystem().drive(commandData.getLeftStick(), commandData.getLeftStick()); // drive straight w/ one stick
     } else {
       if (Math.abs(commandData.getTx()) < 20){ // prevent steering out of range of LL
-        if (commandData.getFirstTxBeforeCorrection() > 0){
+        if (!shouldWeGoLeft){
           commandData.setLeftSpeed(commandData.getRightStick());
           commandData.setRightSpeed(commandData.getRightStick() * SmartDashboardMap.VISION_OVER_DRIVE_FACTOR.getDouble());
         } else {

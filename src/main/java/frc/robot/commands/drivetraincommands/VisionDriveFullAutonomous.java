@@ -18,7 +18,7 @@ import frc.robot.subsystems.limelight.ControlMode.CamMode;
 import frc.robot.subsystems.limelight.ControlMode.LedMode;
 import frc.robot.subsystems.limelight.ControlMode.StreamType;
 
-public class VisionDriveWIthAutoCorrectAndDriveStraight extends Command {
+public class VisionDriveFullAutonomous extends Command {
 
   private DriveTrainSubsystem driveTrainSubsystem;
   private Limelight limelight;
@@ -31,7 +31,7 @@ public class VisionDriveWIthAutoCorrectAndDriveStraight extends Command {
 
   private VisionCommandData commandData = new VisionCommandData();
 
-  public VisionDriveWIthAutoCorrectAndDriveStraight(DriveTrainSubsystem driveTrainSubsystem, CameraSubsystem cameraSubsystem, XboxController controller) {
+  public VisionDriveFullAutonomous(DriveTrainSubsystem driveTrainSubsystem, CameraSubsystem cameraSubsystem, XboxController controller) {
     this.driveTrainSubsystem = driveTrainSubsystem;
     this.limelight = cameraSubsystem.getLimelight();
     this.controller = controller;
@@ -61,18 +61,6 @@ public class VisionDriveWIthAutoCorrectAndDriveStraight extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    /*
-      IF first entry -> go into snap mode (calling snap(), then calling handleAutonomousControl()
-      ELSE not first entry
-        IF in snap mode
-          IF deadBandCounter > threshold -> transition to handleUserControl()
-          ELSE continue handleAutonomousControl()
-        ELSE
-          IF tx < threshold -> continue handleUserControl()
-          ELSE go snap(), then handleAutonomousControl()
-    */
-
-
     commandData.refresh();
     if(commandData.getTv()) {
       reportData();
@@ -180,9 +168,13 @@ public class VisionDriveWIthAutoCorrectAndDriveStraight extends Command {
     boolean isUserControl;
     boolean wasUserControl = true;
 
+    public VisionCommandData(){
+      rightStick = -SmartDashboardMap.VISION_AUTODRIVE_SPEED.getDouble(); // for attempting completely autonomous delivery
+    }
+
     public void refresh() {
       leftStick = -controller.getY(Hand.kLeft);
-      rightStick = -controller.getY(Hand.kRight);
+      //rightStick = -SmartDashboardMap.VISION_AUTODRIVE_SPEED.getDouble();//-controller.getY(Hand.kRight);
       tx = limelight.getdegRotationToTarget();
       tv = limelight.getIsTargetFound();
       leftSpeed = 0;
@@ -198,7 +190,6 @@ public class VisionDriveWIthAutoCorrectAndDriveStraight extends Command {
     public void snap(){
       txBeforeCorrection = tx;
       SmartDashboardMap.VISION_TX_BEFORE_CORRECTION.putNumber(txBeforeCorrection);
-      SmartDashboardMap.VISION_FIRST_TX_BEFORE_CORRECTION.putNumber(firstTxBeforeCorrection);
       if (Math.abs(firstTxBeforeCorrection) > 89){
         firstTxBeforeCorrection = txBeforeCorrection;
       }

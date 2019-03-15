@@ -57,9 +57,12 @@ public class SmartDashboardMap {
     public static final JudanValue VISION_TX = makeValue("Vision_tx", 90);
     public static final JudanValue VISION_STICK_DEADBAND = makeValue("Vision_stick deadband", 0.10);
     public static final JudanValue VISION_TX_BEFORE_CORRECTION = makeValue("Vision_tx before correction", 90);
+    public static final JudanValue VISION_FIRST_TX_BEFORE_CORRECTION = makeValue("Vision_first_tx BC", 90);
     public static final JudanValue VISION_OVER_DRIVE_FACTOR = makeValue("Vision Overdrive", .15);
     public static final JudanValue VISION_LEFT_SPEED = makeValue("Vision left speed", 0);
     public static final JudanValue VISION_RIGHT_SPEED = makeValue("Vision right speed", 0);
+    public static final JudanValue VISION_AUTODRIVE_SPEED = makeValue("Vision autodrive speed", 0.5);
+    
 
 
     //debug
