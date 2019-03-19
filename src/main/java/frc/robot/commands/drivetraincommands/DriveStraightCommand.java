@@ -5,47 +5,36 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package frc.robot.commands.hatchcommands;
+package frc.robot.commands.drivetraincommands;
 
 import edu.wpi.first.wpilibj.command.Command;
-import frc.robot.subsystems.HatchControlSubsystem;
+import frc.robot.subsystems.DriveTrainSubsystem;
 
-public abstract class HatchControlCommand extends Command {
-  
-  private HatchControlSubsystem hatchControl;
-  private int degrees;
+public class DriveStraightCommand extends Command {
 
-  public HatchControlCommand(HatchControlSubsystem hatchControl, int degrees) {
-    this.degrees = degrees;
-    this.hatchControl = hatchControl;
-    requires(hatchControl);
+  private DriveTrainSubsystem driveTrain;
+  private long t0;
+
+  public DriveStraightCommand(DriveTrainSubsystem driveTrain) {
+    this.driveTrain = driveTrain;
+    requires(driveTrain);
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    t0 = System.currentTimeMillis();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    this.hatchControl.getServo().setAngle(degrees);
+    driveTrain.drive(-0.3, -0.3); //TODO: test this value, create JudanValue
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return true;
-  }
-
-  // Called once after isFinished returns true
-  @Override
-  protected void end() {
-  }
-
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
+    return System.currentTimeMillis() - t0 > 1000;
   }
 }

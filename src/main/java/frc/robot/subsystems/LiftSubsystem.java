@@ -68,5 +68,15 @@ public class LiftSubsystem extends Subsystem {
 
   }
 
+  public double ticksToInches(double ticks){
+    // TODO: make sure this is correct
+    return ticks * (Math.PI * 2.5) / 4096;
+  }
+
+  public double inchesToTicks(double inches){
+    // TODO: make sure this is correct
+    return inches / (Math.PI * 2.5) * 4096;
+  }
+
   public WPI_TalonSRX getTalon(){ return talon; }
 }

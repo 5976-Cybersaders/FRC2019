@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.Hand;
 import frc.robot.XBoxButton.RawButton;
 
 import frc.robot.commands.cameracommands.SwitchCameraCommand;
@@ -20,8 +21,7 @@ import frc.robot.commands.drivetraincommands.VisionDriveCommand;
 import frc.robot.commands.drivetraincommands.VisionDriveCompleteAutonomous;
 import frc.robot.commands.drivetraincommands.VisionDriveConSelectedSide;
 import frc.robot.commands.drivetraincommands.VisionDriveWIthAutoCorrectAndDriveStraight;
-import frc.robot.commands.hatchcommands.DeliverHatchCommand;
-import frc.robot.commands.hatchcommands.GrabHatchCommand;
+import frc.robot.commands.liftcommands.ExtractHookAfterHatchDeliveryCommandGroup;
 import frc.robot.commands.liftcommands.RaiseLiftToFixedPositionCommand;
 
 /**
@@ -61,19 +61,20 @@ public class OI {
   private final XboxController SECONDARY_CONTROLLER = new XboxController(1);
 
   private XBoxButton switchCamera1;
-  private XBoxButton liftToLowCargo;
-  private XBoxButton liftToMiddleCargo;
-  private XBoxButton liftToLowHatch;
 
-  private XBoxButton grabHatch;
-  private XBoxButton deliverHatch;
+  private XBoxButton liftToLowHatch;
+  private XBoxButton liftToMiddleRocketHatch;
+  private XBoxButton liftToRocketLowCargo;
+  private XBoxButton liftToMiddleCargo;
+  private XBoxTrigger liftToShuttleCargo;
+  private XBoxTrigger liftToCargoPickup;
   
   private XBoxButton actuateFrontPiston;
   private XBoxButton actuateBackPiston;
   private XBoxButton visionDrive;
   private XBoxButton visionDriveLeft;
   private XBoxButton deployCargoIntakeControl;
-  private XBoxButton retractCargoIntakeControl;
+  private XBoxButton extractHookAfterHatch;
 
   public OI(Robot robot){
     System.out.println("We made it to the OI bois :)");
@@ -86,15 +87,18 @@ public class OI {
     this.actuateFrontPiston = new XBoxButton(DRIVER_CONTROLLER, RawButton.RB);
     this.actuateBackPiston = new XBoxButton(DRIVER_CONTROLLER, RawButton.LB);
 
-    // Note -- the sticks on the SECONDARY_CONTROLLER are used by the ManualMoveLiftCommand
-    this.liftToLowCargo = new XBoxButton(SECONDARY_CONTROLLER, RawButton.X);
-    this.liftToMiddleCargo = new XBoxButton(SECONDARY_CONTROLLER, RawButton.Y);
-    this.liftToLowHatch = new XBoxButton(SECONDARY_CONTROLLER, RawButton.A);
+    // Note -- the left stick on the SECONDARY_CONTROLLER are used by the ManualMoveLiftCommand
+    liftToLowHatch = new XBoxButton(SECONDARY_CONTROLLER, RawButton.A);
+    liftToMiddleRocketHatch = new XBoxButton(SECONDARY_CONTROLLER, RawButton.B);
+    //liftToHighHatch = new XBoxButton(SECONDARY_CONTROLLER, RawButton.A);
+    liftToRocketLowCargo = new XBoxButton(SECONDARY_CONTROLLER, RawButton.X);
+    liftToMiddleCargo = new XBoxButton(SECONDARY_CONTROLLER, RawButton.Y);
+
+    liftToCargoPickup = new XBoxTrigger(SECONDARY_CONTROLLER, Hand.kLeft);
+    liftToShuttleCargo = new XBoxTrigger(SECONDARY_CONTROLLER, Hand.kRight);
+
     deployCargoIntakeControl = new XBoxButton(SECONDARY_CONTROLLER, RawButton.RB);
-    retractCargoIntakeControl = new XBoxButton(SECONDARY_CONTROLLER, RawButton.LB);
-    
-    //this.grabHatch = new XBoxButton(SECONDARY_CONTROLLER, RawButton.LB); //TODO: remove hatch code
-    //this.deliverHatch = new XBoxButton(SECONDARY_CONTROLLER, RawButton.RB);
+    extractHookAfterHatch = new XBoxButton(SECONDARY_CONTROLLER, RawButton.LB); // TODO: create CommandGroup for after scoring a hatch
 
     System.out.println("Adios amigos :(");
   }
@@ -112,13 +116,21 @@ public class OI {
     //this.actuateFrontPiston.whileHeld(new ActuateFrontPistonCommand(robot.getClimbSubsystem()));
     //this.actuateBackPiston.whileHeld(new ActuateBackPistonCommand(robot.getClimbSubsystem()));
     
-    //this.liftToLowCargo.whenPressed(RaiseLiftToFixedPositionCommand.RaiseLiftToLowCargo(robot.getLiftSubsystem()));
-    //this.liftToMiddleCargo.whenPressed(RaiseLiftToFixedPositionCommand.RaiseLiftToMiddleCargo(robot.getLiftSubsystem()));
-    //this.liftToLowHatch.whenPressed(RaiseLiftToFixedPositionCommand.RaiseLiftToLowHatch(robot.getLiftSubsystem()));
-    //deployCargoIntakeControl.whenPressed(new DeployCargoIntakeCommand(robot.getCargoIntakeSubsystem()));
-    //retractCargoIntakeControl.whenPressed(new RetractCargoIntakeCommand(robot.getCargoIntakeSubsystem()));
-    //this.grabHatch.whenPressed(new GrabHatchCommand(robot.getHatchControlSubsystem()));
-    //this.deliverHatch.whenPressed(new DeliverHatchCommand(robot.getHatchControlSubsystem()));
+    //liftToLowHatch.whileHeld(RaiseLiftToFixedPositionCommand.RaiseLiftToLowHatch(robot.getLiftSubsystem()));
+    //liftToMiddleRocketHatch.whileHeld(RaiseLiftToFixedPositionCommand.RaiseLiftToMidRocketHatch(robot.getLiftSubsystem()));
+    //liftToMiddleCargo.whileHeld(RaiseLiftToFixedPositionCommand.RaiseLiftToMidRocketCargo(robot.getLiftSubsystem()));
+
+    //liftToRocketLowCargo.whileHeld(RaiseLiftToFixedPositionCommand.RaiseLiftToShuttleCargo(robot.getLiftSubsystem()));
+    
+    //TODO: figure out binding a command to a trigger
+    //liftToCargoPickup.whileHeld(RaiseLiftToFixedPositionCommand.RaiseLiftToCargoPickup(robot.getLiftSubsystem()));
+    //liftToShuttleCargo.whileHeld(RaiseLiftToFixedPositionCommand.RaiseLiftToShuttleCargo(robot.getLiftSubsystem()));
+    
+    deployCargoIntakeControl.whenPressed(new DeployCargoIntakeCommand(robot.getCargoIntakeSubsystem()));
+    
+    //TODO: ****complete this command group***
+    extractHookAfterHatch.whenPressed(new ExtractHookAfterHatchDeliveryCommandGroup(
+      robot.getDriveTrain(), robot.getLiftSubsystem()));
 
     System.out.println("*** Buttons bound ***");
   }

@@ -24,7 +24,6 @@ import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DriveTrainBurnInSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.HatchControlSubsystem;
 import frc.robot.subsystems.LiftSubsystem;
 
 /**
@@ -45,7 +44,6 @@ public class Robot extends TimedRobot {
   private DriveTrainSubsystem driveTrain;
   private LiftSubsystem liftSubsystem;
   private CargoIntakeSubsystem cargoIntakeSubsystem;
-  private HatchControlSubsystem hatchControlSubsystem;
   private CameraSubsystem cameraSubsystem;
 
   private ClimbSubsystem climbSubsystem;
@@ -177,7 +175,6 @@ public class Robot extends TimedRobot {
   public DriveTrainSubsystem getDriveTrain() { return this.driveTrain; }
   public LiftSubsystem getLiftSubsystem() { return this.liftSubsystem; }
   public CargoIntakeSubsystem getCargoIntakeSubsystem() { return this.cargoIntakeSubsystem; }
-  public HatchControlSubsystem getHatchControlSubsystem() { return this.hatchControlSubsystem; }
   public CameraSubsystem getCameraSubsystem() { return this.cameraSubsystem; }
   public ClimbSubsystem getClimbSubsystem() { return this.climbSubsystem; }
 

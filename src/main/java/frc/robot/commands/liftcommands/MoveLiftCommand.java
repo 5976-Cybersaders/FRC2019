@@ -8,7 +8,6 @@
 package frc.robot.commands.liftcommands;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Command;
@@ -18,16 +17,17 @@ public abstract class MoveLiftCommand extends Command {
 
   private WPI_TalonSRX talon;
   private int ticks;
+  private boolean exitWhenAtPos;
 
   private int kPositionTolerance = 10; //TODO: figure out constants
 
-  public MoveLiftCommand(LiftSubsystem liftSubsystem, int posInches, int timeout) {
+  public MoveLiftCommand(LiftSubsystem liftSubsystem, int posInches, boolean exitWhenAtPos) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-    this.ticks = (int) (posInches * toTicks(posInches));
+    this.exitWhenAtPos = exitWhenAtPos;
+    this.ticks = (int) (liftSubsystem.inchesToTicks(posInches));
     this.talon = liftSubsystem.getTalon();
     requires(liftSubsystem);
-    setTimeout(timeout);
     setInterruptible(true);
   }
 
@@ -46,7 +46,7 @@ public abstract class MoveLiftCommand extends Command {
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return isTimedOut() || isAtPos();
+    return exitWhenAtPos ? isAtPos() : false;
   }
 
   // Called once after isFinished returns true
@@ -61,10 +61,6 @@ public abstract class MoveLiftCommand extends Command {
   }
 
   private boolean isAtPos(){
-    return this.talon.getSelectedSensorPosition() - this.ticks < kPositionTolerance;
-  }
-
-  private double toTicks(double inches) { // TODO: make sure this is correct
-    return inches / (Math.PI * 2.5) * 4096;
+    return talon.getSelectedSensorPosition() - ticks < kPositionTolerance;
   }
 }
