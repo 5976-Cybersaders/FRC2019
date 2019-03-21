@@ -13,31 +13,31 @@ import frc.robot.subsystems.LiftSubsystem;
 public class RaiseLiftToFixedPositionCommand extends MoveLiftCommand {
 
   //TODO: figure out timeout values for each command
-  private RaiseLiftToFixedPositionCommand(LiftSubsystem liftSubsystem, int posInches) {
-    super(liftSubsystem, posInches, false);
+  private RaiseLiftToFixedPositionCommand(LiftSubsystem liftSubsystem, int ticks) {
+    super(liftSubsystem, ticks, false);
   }
 
-  private RaiseLiftToFixedPositionCommand(LiftSubsystem liftSubsystem, int posInches, boolean exitWhenAtPos){
-    super(liftSubsystem, posInches, exitWhenAtPos);
+  private RaiseLiftToFixedPositionCommand(LiftSubsystem liftSubsystem, int ticks, boolean exitWhenAtPos){
+    super(liftSubsystem, ticks, exitWhenAtPos);
   }
 
   public static RaiseLiftToFixedPositionCommand RaiseLiftToLowHatch(LiftSubsystem liftSubsystem){
     return new RaiseLiftToFixedPositionCommand(liftSubsystem,
-      SmartDashboardMap.LIFT_TO_LOW_POS_INCHES.getIntValue());
+      SmartDashboardMap.LIFT_TO_LOW_POS_TICKS.getIntValue());
   }
 
   public static RaiseLiftToFixedPositionCommand RaiseLiftToMidRocketHatch(LiftSubsystem liftSubsystem){
     return new RaiseLiftToFixedPositionCommand(liftSubsystem,
-      SmartDashboardMap.LIFT_TO_MID_HATCH_ROCKET_POS_INCHES.getIntValue());
+      SmartDashboardMap.LIFT_TO_MID_HATCH_ROCKET_POS_TICKS.getIntValue());
   }
 
   // public static RaiseLiftToFixedPositionCommand RaiseLiftToHighRocketHatch(LiftSubsystem liftSubsystem){
-  //   return new RaiseLiftToFixedPositionCommand(liftSubsystem, SmartDashboardMap.LIFT_TO_HIGH_HATCH_ROCKET_POS_INCHES.getIntValue(), 10);
+  //   return new RaiseLiftToFixedPositionCommand(liftSubsystem, SmartDashboardMap.LIFT_TO_HIGH_HATCH_ROCKET_POS_TICKS.getIntValue(), 10);
   // }
 
   public static RaiseLiftToFixedPositionCommand RaiseLiftToMidRocketCargo(LiftSubsystem liftSubsystem){
     return new RaiseLiftToFixedPositionCommand(liftSubsystem,
-      SmartDashboardMap.LIFT_TO_MID_CARGO_ROCKET_POS_INCHES.getIntValue());
+      SmartDashboardMap.LIFT_TO_MID_CARGO_ROCKET_POS_TICKS.getIntValue());
   }
 
   public static RaiseLiftToFixedPositionCommand RaiseLiftToShuttleCargo(LiftSubsystem liftSubsystem){
@@ -47,17 +47,17 @@ public class RaiseLiftToFixedPositionCommand extends MoveLiftCommand {
 
   public static RaiseLiftToFixedPositionCommand RaiseLiftToCargoPickup(LiftSubsystem liftSubsystem){
     return new RaiseLiftToFixedPositionCommand(liftSubsystem, 
-      SmartDashboardMap.LIFT_TO_CARGO_PICKUP_POS_INCHES.getIntValue());
+      SmartDashboardMap.LIFT_TO_CARGO_PICKUP_POS_TICKS.getIntValue());
   }
 
   public static RaiseLiftToFixedPositionCommand RaiseLiftToRocketLowCargo(LiftSubsystem liftSubsystem){
     return new RaiseLiftToFixedPositionCommand(liftSubsystem,
-      SmartDashboardMap.LIFT_TO_ROCKET_LOW_CARGO_POS_INCHES.getIntValue());
+      SmartDashboardMap.LIFT_TO_ROCKET_LOW_CARGO_POS_TICKS.getIntValue());
   }
 
-  public static RaiseLiftToFixedPositionCommand LowerLiftByInches(LiftSubsystem liftSubsystem, double inchesLower){
+  public static RaiseLiftToFixedPositionCommand LowerLiftByInches(LiftSubsystem liftSubsystem, int ticksLower){
     return new RaiseLiftToFixedPositionCommand(liftSubsystem,
-      (int) (liftSubsystem.ticksToInches(liftSubsystem.getTalon().getSelectedSensorPosition()) - inchesLower), true);
+      liftSubsystem.getTalon().getSelectedSensorPosition() - ticksLower, true);
   }
 
 }

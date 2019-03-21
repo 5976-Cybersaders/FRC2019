@@ -55,16 +55,18 @@ public class SmartDashboardMap {
     cargo on shuttle
     */
     //TODO: establish defaults for these lift position values
-    public static final JudanValue LIFT_TO_LOW_POS_INCHES = makeValue("Lift low position inches", 0);
-    public static final JudanValue LIFT_TO_MID_HATCH_ROCKET_POS_INCHES = makeValue("Lift mid rocket inches", 1);
-    //public static final JudanValue LIFT_TO_HIGH_HATCH_ROCKET_POS_INCHES = makeValue("Lift high rocket", 2);
+    public static final JudanValue LIFT_TO_LOW_POS_TICKS = makeValue("Lift low position inches", 0);
+    public static final JudanValue LIFT_TO_MID_HATCH_ROCKET_POS_TICKS = makeValue("Lift mid rocket inches", 1);
+    //public static final JudanValue LIFT_TO_HIGH_HATCH_ROCKET_POS_TICKS = makeValue("Lift high rocket", 2);
 
-    public static final JudanValue LIFT_TO_ROCKET_LOW_CARGO_POS_INCHES = makeValue("Lift low rocket cargo", 1);
-    public static final JudanValue LIFT_TO_MID_CARGO_ROCKET_POS_INCHES = makeValue("Lift mid rocket cargo", 3);
+    public static final JudanValue LIFT_TO_ROCKET_LOW_CARGO_POS_TICKS = makeValue("Lift low rocket cargo", 1);
+    public static final JudanValue LIFT_TO_MID_CARGO_ROCKET_POS_TICKS = makeValue("Lift mid rocket cargo", 3);
     
-    public static final JudanValue LIFT_TO_CARGO_PICKUP_POS_INCHES = makeValue("Lift pickup cargo", 0);
+    public static final JudanValue LIFT_TO_CARGO_PICKUP_POS_TICKS = makeValue("Lift pickup cargo", 0);
 
     public static final JudanValue LIFT_TO_SHUTTLE_CARGO = makeValue("Lift shuttle cargo", 2);
+
+    public static final JudanValue LIFT_CURRENT_TICK_COUNT = makeValue("Lift tick count", 0);
 
     // Vision
     public static final JudanValue VISION_DEADBAND = makeValue("Vision_Deadband", 1.5);

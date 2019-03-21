@@ -17,7 +17,7 @@ public class ExtractHookAfterHatchDeliveryCommandGroup extends CommandGroup {
    * Add your docs here.
    */
   public ExtractHookAfterHatchDeliveryCommandGroup(DriveTrainSubsystem driveTrain, LiftSubsystem liftSubsystem) {
-    addSequential(RaiseLiftToFixedPositionCommand.LowerLiftByInches(liftSubsystem, 2.5)); //TODO: is 2.5 inches enough?
-    addSequential(new DriveStraightCommand(driveTrain));
+    addSequential(RaiseLiftToFixedPositionCommand.LowerLiftByInches(liftSubsystem, 10)); //TODO: how many ticks?
+    addSequential(new DriveStraightCommand(driveTrain, -0.3)); // negative bc driving backwards
   }
 }

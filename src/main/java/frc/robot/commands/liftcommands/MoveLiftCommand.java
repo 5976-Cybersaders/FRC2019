@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Command;
+import frc.robot.SmartDashboardMap;
 import frc.robot.subsystems.LiftSubsystem;
 
 public abstract class MoveLiftCommand extends Command {
@@ -19,14 +20,26 @@ public abstract class MoveLiftCommand extends Command {
   private int ticks;
   private boolean exitWhenAtPos;
 
+  private int printCounter;
+
   private int kPositionTolerance = 10; //TODO: figure out constants
 
-  public MoveLiftCommand(LiftSubsystem liftSubsystem, int posInches, boolean exitWhenAtPos) {
+  // public MoveLiftCommand(LiftSubsystem liftSubsystem, int posInches, boolean exitWhenAtPos) {
+  //   // Use requires() here to declare subsystem dependencies
+  //   // eg. requires(chassis);
+  //   this.exitWhenAtPos = exitWhenAtPos;
+  //   this.ticks = (int) (liftSubsystem.inchesToTicks(posInches));
+  //   this.talon = liftSubsystem.getTalon();
+  //   requires(liftSubsystem);
+  //   setInterruptible(true);
+  // }
+  public MoveLiftCommand(LiftSubsystem liftSubsystem, int ticks, boolean exitWhenAtPos) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     this.exitWhenAtPos = exitWhenAtPos;
-    this.ticks = (int) (liftSubsystem.inchesToTicks(posInches));
+    this.ticks = ticks;
     this.talon = liftSubsystem.getTalon();
+    printCounter = 25;
     requires(liftSubsystem);
     setInterruptible(true);
   }
@@ -40,6 +53,11 @@ public abstract class MoveLiftCommand extends Command {
   @Override
   protected void execute() {
     this.talon.set(ControlMode.Position, ticks);
+    if (printCounter >= 25){
+      SmartDashboardMap.LIFT_CURRENT_TICK_COUNT.putNumber(talon.getSelectedSensorPosition());
+      printCounter = 0;
+    }
+    printCounter++;
     //System.out.println("Lift Sensor Position " + this.talon.getSelectedSensorPosition() + "  Moving to: " + ticks);
   }
 

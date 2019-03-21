@@ -13,10 +13,12 @@ import frc.robot.subsystems.DriveTrainSubsystem;
 public class DriveStraightCommand extends Command {
 
   private DriveTrainSubsystem driveTrain;
+  private double speed;
   private long t0;
 
-  public DriveStraightCommand(DriveTrainSubsystem driveTrain) {
+  public DriveStraightCommand(DriveTrainSubsystem driveTrain, double speed) {
     this.driveTrain = driveTrain;
+    this.speed = speed;
     requires(driveTrain);
   }
 
@@ -29,7 +31,7 @@ public class DriveStraightCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    driveTrain.drive(-0.3, -0.3); //TODO: test this value, create JudanValue
+    driveTrain.drive(speed, speed);
   }
 
   // Make this return true when this Command no longer needs to run execute()
