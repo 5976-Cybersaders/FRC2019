@@ -23,6 +23,7 @@ import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.FrontClimbSubsystem;
 import frc.robot.subsystems.LiftSubsystem;
+import frc.robot.subsystems.limelight.ControlMode.LedMode;
 
 /**
  * The VM is configured to automatically run this class, and to call the

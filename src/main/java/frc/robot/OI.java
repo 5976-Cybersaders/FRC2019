@@ -82,8 +82,8 @@ public class OI {
     // Note -- the sticks on the DRIVER_CONTROLLER are used by the TeleOpDriveCommand
     // Note -- the triggers on the DRIVER_CONTROLLER are used by the CargoIntakeCommand
     this.switchCamera1 = new XBoxButton(DRIVER_CONTROLLER, RawButton.X);
-    this.visionDrive = new XBoxButton(DRIVER_CONTROLLER, RawButton.B);
-    this.visionDriveLeft = new XBoxButton(DRIVER_CONTROLLER, RawButton.Y);
+    this.visionDrive = new XBoxButton(DRIVER_CONTROLLER, RawButton.Y);
+    this.visionDriveLeft = new XBoxButton(DRIVER_CONTROLLER, RawButton.B);
     this.actuateFrontPiston = new XBoxButton(DRIVER_CONTROLLER, RawButton.RB);
     this.actuateBackPiston = new XBoxButton(DRIVER_CONTROLLER, RawButton.LB);
 

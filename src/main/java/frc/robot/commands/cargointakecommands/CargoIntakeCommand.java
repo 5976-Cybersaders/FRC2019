@@ -65,3 +65,4 @@ public class CargoIntakeCommand extends Command {
     return Math.abs(speed) < 0.05 ? 0 : speed;
   }
 }
+ 

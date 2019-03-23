@@ -5,6 +5,13 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
+/*
+* Could improve the factor on line 152
+* Could decrease/increase txdeadband
+*/
+
+
+
 package frc.robot.commands.drivetraincommands;
 
 import edu.wpi.first.wpilibj.XboxController;
@@ -30,6 +37,8 @@ public class VisionDriveCompleteAutonomous extends Command {
   private boolean shouldWeGoLeft;
   private boolean isSnapMode;
 
+  private double txBand = 10; // +/-
+
   private VisionCommandData commandData = new VisionCommandData();
 
   public VisionDriveCompleteAutonomous(DriveTrainSubsystem driveTrainSubsystem, CameraSubsystem cameraSubsystem, XboxController controller, boolean shouldWeGoLeft) {
@@ -52,6 +61,7 @@ public class VisionDriveCompleteAutonomous extends Command {
     this.min_cmd = SmartDashboardMap.VISION_MIN_CMD.getValue();
     txCounter = 25; // so that it is reported on the first iteration
     this.isSnapMode = true;
+    System.out.println("\n\n\n**************************************************");
     System.out.println("Deadband: "  + deadband);
     System.out.println("KP: "  + kp);
     System.out.println("Minimum command: "  + min_cmd);
@@ -60,45 +70,26 @@ public class VisionDriveCompleteAutonomous extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    /*
-      IF first entry -> go into snap mode (calling snap(), then calling handleAutonomousControl()
-      ELSE not first entry
-        IF in snap mode
-          IF deadBandCounter > threshold -> transition to handleUserControl()
-          ELSE continue handleAutonomousControl()
-        ELSE
-          IF tx < threshold -> continue handleUserControl()
-          ELSE go snap(), then handleAutonomousControl()
-    */
-
-    /*
-      starting position <-- *initialize*
-      while (ta < 11) { <-- *execute start*
-        correct angle //  correcting mode
-        while (Math.abs(tx) < 22) {
-          drive towards center line // driving mode
-        }
-      } <-- *execute end*
-    */
-      if(txCounter == 25) {
-        commandData.report();
-        txCounter = 0;
-      } else {
-        txCounter++;
-      }
-
     commandData.refresh();
+    if(!commandData.getTv()) {
+      System.out.println("Waiting for target!!! " + commandData.getTx());
+      driveTrainSubsystem.visionDrive(0, 0);
+      return;
+    }
     determineMode();
     if(isSnapMode) {
       handleSnapMode();
     } else {
       handleDriveMode();
     }
-    if(commandData.getTa() < 12) {
-      driveTrainSubsystem.visionDrive(commandData.getLeftSpeed(), commandData.getRightSpeed());
-    } else {
-      driveTrainSubsystem.visionDrive(0, 0);
 
+    driveTrainSubsystem.visionDrive(commandData.getLeftSpeed(), commandData.getRightSpeed());
+
+    if(txCounter >= 5) {
+      commandData.report();
+      txCounter = 0;
+    } else {
+      txCounter++;
     }
   }
 
@@ -131,21 +122,53 @@ public class VisionDriveCompleteAutonomous extends Command {
   }
 
   public void determineMode() {
-    if(isSnapMode) {
-      if(deadBandCounter >= 25) {
+    boolean oldIsSnapMode = isSnapMode;
+    if (commandData.getTa() > 4) {
+      isSnapMode = true;
+    } else if(isSnapMode) {
+      if(deadBandCounter >= 6) {
         deadBandCounter = 0;
         isSnapMode = false;
       }
     } else {
       isSnapMode = Math.abs(commandData.getTx()) >= 20;
     }
+    if (oldIsSnapMode != isSnapMode){
+      System.out.println("Snap Mode changed." + " tx: " + commandData.getTx() + " | Deadband counter: " + deadBandCounter + " | isSnapMode: " + isSnapMode + " | Ta: " + commandData.getTa());
+    }
+  }
+
+  /* private double getSpeed(){
+    double maxSpeed = SmartDashboardMap.VISION_DRIVE_MODE_SPEED.getDouble();
+    double factorXAdjust = Math.sqrt(((Math.pow(txBand, 2) * (min_cmd - 1.8))/-1.8)); // adjustment along x axis for the ramping formula to ramp up and ramp down sooner
+    double factorForCorrect = (-1.8/Math.pow(txBand, 2)) * Math.pow(Math.abs(commandData.getTx()) - factorXAdjust, 2) + 1.8;
+    //(-1.8/Math.pow(txBand, 2)) * Math.pow(commandData.getTx() - txBand, 2) + 1.8;
+    double correctedRawSpeed = maxSpeed * factorForCorrect;
+    double adjustedSpeed = Math.max(correctedRawSpeed, Math.abs(min_cmd));
+    double finalSpeed = Math.min(adjustedSpeed, maxSpeed);
+   // System.out.println("Factor: " + factorForCorrect + " CorrectedRawSpeed: " + correctedRawSpeed + " Final speed: " + finalSpeed);
+    return finalSpeed;
+  } */
+
+  public double getSpeed() {
+    double maxSpeed = SmartDashboardMap.VISION_DRIVE_MODE_SPEED.getDouble();
+    double absTx = Math.abs(Math.abs(commandData.getTx()) - txBand);
+    double factor = 1 - absTx / txBand;
+    double scaledFactor = factor * 30;
+    double scaledMaxSpeed = scaledFactor * maxSpeed;
+
+    double adjustedSpeed = Math.max(scaledMaxSpeed, Math.abs(min_cmd));
+    double finalSpeed = Math.min(adjustedSpeed, maxSpeed);
+   // System.out.println("Factor: " + factorForCorrect + " CorrectedRawSpeed: " + correctedRawSpeed + " Final speed: " + finalSpeed);
+    return finalSpeed;
+
   }
 
   private void handleDriveMode(){
     //If command is entered with user control true on first iteration we should snap because in the normal case we only snap when not in user control
-    double speed = 0.257;
-    double lesserSpeed = speed * SmartDashboardMap.VISION_OVER_DRIVE_FACTOR.getDouble();
-      if (Math.abs(commandData.getTx()) < 20){ // prevent steering out of range of LL
+    double speed = getSpeed();
+    double lesserSpeed = -(speed * SmartDashboardMap.VISION_OVER_DRIVE_FACTOR.getDouble());
+      if (Math.abs(commandData.getTx()) < 2*txBand){ // prevent steering out of range of LL
         if (!shouldWeGoLeft){
           commandData.setLeftSpeed(speed);
           commandData.setRightSpeed(lesserSpeed);
