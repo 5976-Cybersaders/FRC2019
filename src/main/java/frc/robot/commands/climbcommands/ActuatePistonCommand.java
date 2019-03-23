@@ -48,11 +48,14 @@ public abstract class ActuatePistonCommand extends Command {
   @Override
   protected void end() {
     doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
+    System.out.println("ENDED!!!!!!");
+
     //System.out.println(getClass().getSimpleName() + " moving piston Reverse");
   }
 
   @Override
   protected void interrupted() {
+    System.out.println("INTERPUTED!!!!!!");
     end();
   }
 

@@ -14,16 +14,14 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.BurnInDoNothingCommand;
-import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.cargointakecommands.DeployCargoIntakeCommand;
-import frc.robot.commands.drivetraincommands.GearBoxBurnCommand;
+import frc.robot.subsystems.BackClimbSubsystem;
 import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.CargoIntakeSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
-import frc.robot.subsystems.DriveTrainBurnInSubsystem;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import frc.robot.subsystems.FrontClimbSubsystem;
 import frc.robot.subsystems.LiftSubsystem;
 
 /**
@@ -34,21 +32,18 @@ import frc.robot.subsystems.LiftSubsystem;
  * project.
  */
 public class Robot extends TimedRobot {
-  //public static ExampleSubsystem m_subsystem = new ExampleSubsystem();
   public static OI m_oi;
 
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
-  private DriveTrainBurnInSubsystem driveTrainBurnIn;
   private DriveTrainSubsystem driveTrain;
-  private LiftSubsystem liftSubsystem;
-  private CargoIntakeSubsystem cargoIntakeSubsystem;
+ // private LiftSubsystem liftSubsystem;
+  //private CargoIntakeSubsystem cargoIntakeSubsystem;
   private CameraSubsystem cameraSubsystem;
 
-  private ClimbSubsystem climbSubsystem;
-
-  private Command burnInCommand;
+  //private FrontClimbSubsystem frontClimbSubsystem;
+  //private BackClimbSubsystem backClimbSubsystem;
 
   private int counter = 0;
 
@@ -61,14 +56,13 @@ public class Robot extends TimedRobot {
     System.out.println("****** BEGIN ROBOT INIT ******");
     SmartDashboardMap.reportAll();
     m_oi = new OI(this);
-    counter = 0;
-    //this.liftSubsystem = new LiftSubsystem(m_oi);
-    //this.hatchControlSubsystem = new HatchControlSubsystem();
-    //this.cargoIntakeSubsystem = new CargoIntakeSubsystem(m_oi);
-    this.driveTrain = new DriveTrainSubsystem(m_oi);
-    this.cameraSubsystem = new CameraSubsystem(); // TODO: change CameraSubsystem constructor
+    //liftSubsystem = new LiftSubsystem(m_oi);
+    //cargoIntakeSubsystem = new CargoIntakeSubsystem(m_oi);
+    driveTrain = new DriveTrainSubsystem(m_oi);
+    cameraSubsystem = new CameraSubsystem(); // TODO: change CameraSubsystem constructor
     
-    //this.climbSubsystem = new ClimbSubsystem();
+    //frontClimbSubsystem = new FrontClimbSubsystem();
+    //backClimbSubsystem = new BackClimbSubsystem();
 
     m_oi.bindButtons(this);
 
@@ -147,7 +141,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    burnInCommand = null;
     cameraSubsystem.initLimelight();
     //liftSubsystem.initTalon(); TODO: uncomment this for production code
   }
@@ -157,11 +150,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-    counter++;
-    if (this.burnInCommand == null && counter > 10){
-      // this.burnInCommand = new BurnCommandGroup();
-      // this.burnInCommand.start();
-    }
     Scheduler.getInstance().run();
   }
 
@@ -172,48 +160,12 @@ public class Robot extends TimedRobot {
   public void testPeriodic() {
   }
 
-  public DriveTrainSubsystem getDriveTrain() { return this.driveTrain; }
-  public LiftSubsystem getLiftSubsystem() { return this.liftSubsystem; }
-  public CargoIntakeSubsystem getCargoIntakeSubsystem() { return this.cargoIntakeSubsystem; }
-  public CameraSubsystem getCameraSubsystem() { return this.cameraSubsystem; }
-  public ClimbSubsystem getClimbSubsystem() { return this.climbSubsystem; }
+  public DriveTrainSubsystem getDriveTrain() { return driveTrain; }
+  //public LiftSubsystem getLiftSubsystem() { return liftSubsystem; }
+  //public CargoIntakeSubsystem getCargoIntakeSubsystem() { return cargoIntakeSubsystem; }
+  public CameraSubsystem getCameraSubsystem() { return cameraSubsystem; }
+  //public FrontClimbSubsystem getFrontClimbSubsystem() { return frontClimbSubsystem; }
+  //public BackClimbSubsystem getBackClimbSubsystem() { return backClimbSubsystem; }
 
-  class BurnCommandGroup extends CommandGroup {
-    int runTimeSeconds = 20;
-    int waitTimeSeconds = 2*runTimeSeconds;
-    int iterations = 2;
-    BurnCommandGroup(){
-      // this.addCommand(-0.1, runTimeSeconds, iterations);
-      // this.addCommand(-0.2, runTimeSeconds, iterations);
-      // this.addCommand(-0.3, runTimeSeconds, iterations);
-      // this.addCommand(-0.4, runTimeSeconds, iterations);
-      // this.addCommand(-0.5, runTimeSeconds, iterations);
-      // this.addCommand(-0.6, runTimeSeconds, iterations);
-      // this.addCommand(-0.7, runTimeSeconds, iterations);
-      // this.addCommand(-0.8, runTimeSeconds, iterations);
-
-      this.addCommand(0.3, runTimeSeconds, 8);
-      this.addCommand(-0.3, runTimeSeconds, 8);
-      this.addCommand(0.5, runTimeSeconds, iterations);
-      this.addCommand(-0.5, runTimeSeconds, iterations);
-      this.addCommand(0.7, runTimeSeconds, 1);
-      this.addCommand(-0.7, runTimeSeconds, 1);
-
-    }
-
-    private void addCommand(double speed, int runSeconds, int iterations){
-      for (int i = 0; i < iterations; i++){
-        SingleStepBurnCommandGroup singleStep = new SingleStepBurnCommandGroup(speed, runSeconds);
-        this.addSequential(singleStep);
-      }
-    }
-  }
-
-  class SingleStepBurnCommandGroup extends CommandGroup {
-    SingleStepBurnCommandGroup(double speed, int runSeconds){
-      int waitSeconds = runSeconds * 2;
-      this.addSequential(new GearBoxBurnCommand(driveTrainBurnIn, speed, runSeconds));
-      this.addSequential(new BurnInDoNothingCommand(driveTrainBurnIn, waitSeconds));
-    }
-  }
+  
 }

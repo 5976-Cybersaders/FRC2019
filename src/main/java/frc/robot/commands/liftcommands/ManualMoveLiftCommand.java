@@ -42,6 +42,7 @@ public class ManualMoveLiftCommand extends Command {
   @Override
   protected void execute() {
     int speedAdjustment = 4;
+    //If lift moves in reverse direction, don't negate here. Check Robot class if liftTalon is initied.
     double rawSpeed = this.adjustSpeed(this.controller.getY(Hand.kLeft));
     double adjustedSpeed = rawSpeed / speedAdjustment; 
 

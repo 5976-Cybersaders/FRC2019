@@ -7,28 +7,23 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
+
 import frc.robot.commands.climbcommands.ClimbDoNothingCommand;
 
 /**
  * Add your docs here.
  */
-abstract public class ClimbSubsystem extends Subsystem {
-  private DoubleSolenoid solenoid;
+public class FrontClimbSubsystem extends ClimbSubsystem {
 
-  public ClimbSubsystem(DoubleSolenoid solenoid){
-    this.solenoid = solenoid; 
-  }
+  private Compressor compressor;
 
-  @Override
-  public void initDefaultCommand() {
-    setDefaultCommand(new ClimbDoNothingCommand(this));
+  public FrontClimbSubsystem(){
+    super(new DoubleSolenoid(0,1));
+    compressor = new Compressor();
+    compressor.setClosedLoopControl(true);
   }
-
-  public DoubleSolenoid getSolenoid(){
-    return solenoid;
-  }
-  
 
 }

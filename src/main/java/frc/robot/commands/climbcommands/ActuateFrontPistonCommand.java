@@ -7,10 +7,10 @@
 
 package frc.robot.commands.climbcommands;
 
-import frc.robot.subsystems.ClimbSubsystem;
+import frc.robot.subsystems.FrontClimbSubsystem;
 
 public class ActuateFrontPistonCommand extends ActuatePistonCommand {
-  public ActuateFrontPistonCommand(ClimbSubsystem climbSubsystem) {
-    super(climbSubsystem, climbSubsystem.getFrontDoubleSolenoid());
+  public ActuateFrontPistonCommand(FrontClimbSubsystem climbSubsystem) {
+    super(climbSubsystem, climbSubsystem.getSolenoid());
   }
 }

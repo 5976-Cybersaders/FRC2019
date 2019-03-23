@@ -113,24 +113,23 @@ public class OI {
     this.visionDrive.whileHeld(new VisionDriveCompleteAutonomous(robot.getDriveTrain(), robot.getCameraSubsystem(), DRIVER_CONTROLLER, false));
     this.visionDriveLeft.whileHeld(new VisionDriveCompleteAutonomous(robot.getDriveTrain(), robot.getCameraSubsystem(), DRIVER_CONTROLLER, true));
     
-    //this.actuateFrontPiston.whileHeld(new ActuateFrontPistonCommand(robot.getClimbSubsystem()));
-    //this.actuateBackPiston.whileHeld(new ActuateBackPistonCommand(robot.getClimbSubsystem()));
+    /* this.actuateFrontPiston.whileHeld(new ActuateFrontPistonCommand(robot.getFrontClimbSubsystem()));
+    this.actuateBackPiston.whileHeld(new ActuateBackPistonCommand(robot.getBackClimbSubsystem()));
     
-    //liftToLowHatch.whileHeld(RaiseLiftToFixedPositionCommand.RaiseLiftToLowHatch(robot.getLiftSubsystem()));
-    //liftToMiddleRocketHatch.whileHeld(RaiseLiftToFixedPositionCommand.RaiseLiftToMidRocketHatch(robot.getLiftSubsystem()));
-    //liftToMiddleCargo.whileHeld(RaiseLiftToFixedPositionCommand.RaiseLiftToMidRocketCargo(robot.getLiftSubsystem()));
+    liftToLowHatch.whileHeld(RaiseLiftToFixedPositionCommand.RaiseLiftToLowHatch(robot.getLiftSubsystem()));
+    liftToMiddleRocketHatch.whileHeld(RaiseLiftToFixedPositionCommand.RaiseLiftToMidRocketHatch(robot.getLiftSubsystem()));
+    liftToMiddleCargo.whileHeld(RaiseLiftToFixedPositionCommand.RaiseLiftToMidRocketCargo(robot.getLiftSubsystem()));
 
-    //liftToRocketLowCargo.whileHeld(RaiseLiftToFixedPositionCommand.RaiseLiftToShuttleCargo(robot.getLiftSubsystem()));
+    liftToRocketLowCargo.whileHeld(RaiseLiftToFixedPositionCommand.RaiseLiftToShuttleCargo(robot.getLiftSubsystem())); */
     
     //TODO: figure out binding a command to a trigger
     //liftToCargoPickup.whileHeld(RaiseLiftToFixedPositionCommand.RaiseLiftToCargoPickup(robot.getLiftSubsystem()));
     //liftToShuttleCargo.whileHeld(RaiseLiftToFixedPositionCommand.RaiseLiftToShuttleCargo(robot.getLiftSubsystem()));
     
-    deployCargoIntakeControl.whenPressed(new DeployCargoIntakeCommand(robot.getCargoIntakeSubsystem()));
+   // deployCargoIntakeControl.whenPressed(new DeployCargoIntakeCommand(robot.getCargoIntakeSubsystem()));
     
     //TODO: ****complete this command group***
-    extractHookAfterHatch.whenPressed(new ExtractHookAfterHatchDeliveryCommandGroup(
-      robot.getDriveTrain(), robot.getLiftSubsystem()));
+    //extractHookAfterHatch.whenPressed(new ExtractHookAfterHatchDeliveryCommandGroup(robot.getDriveTrain(), robot.getLiftSubsystem()));
 
     System.out.println("*** Buttons bound ***");
   }

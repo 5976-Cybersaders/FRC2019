@@ -13,12 +13,10 @@ import frc.robot.subsystems.ClimbSubsystem;
 
 public class ClimbDoNothingCommand extends Command {
 
-  private DoubleSolenoid front;
-  private DoubleSolenoid back;
+  private DoubleSolenoid solenoid;
 
   public ClimbDoNothingCommand(ClimbSubsystem climbSubsystem) {
-    this.front = climbSubsystem.getFrontDoubleSolenoid();
-    this.back = climbSubsystem.getBackDoubleSolenoid();
+    solenoid = climbSubsystem.getSolenoid();
     requires(climbSubsystem);
   }
 
@@ -30,8 +28,7 @@ public class ClimbDoNothingCommand extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    this.front.set(DoubleSolenoid.Value.kOff);
-    this.back.set(DoubleSolenoid.Value.kOff);
+    solenoid.set(DoubleSolenoid.Value.kOff);
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -40,14 +37,4 @@ public class ClimbDoNothingCommand extends Command {
     return false;
   }
 
-  // Called once after isFinished returns true
-  @Override
-  protected void end() {
-  }
-
-  // Called when another command which requires one or more of the same
-  // subsystems is scheduled to run
-  @Override
-  protected void interrupted() {
-  }
 }

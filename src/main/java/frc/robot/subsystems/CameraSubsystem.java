@@ -25,16 +25,21 @@ public class CameraSubsystem extends Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
   private Limelight limelight;
+  private boolean isInited;
 
   public CameraSubsystem() {
+    isInited = false;
     limelight = new Limelight();
     System.out.println("Camera subsystem created with limelight " + limelight);
   }
 
   public void initLimelight(){
-    this.limelight.setCamMode(CamMode.kdriver);
-    this.limelight.setLEDMode(LedMode.kforceOff);
-    this.limelight.setStream(StreamType.kPiPMain);
+    if(!isInited){
+      isInited = true;
+      this.limelight.setCamMode(CamMode.kdriver);
+      this.limelight.setLEDMode(LedMode.kforceOn);
+      this.limelight.setStream(StreamType.kPiPMain);
+    }
   }
 
   @Override

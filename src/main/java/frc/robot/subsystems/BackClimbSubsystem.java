@@ -7,32 +7,19 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
+
+import frc.robot.commands.climbcommands.ClimbDoNothingCommand;
 
 /**
  * Add your docs here.
  */
-public class DriveTrainBurnInSubsystem extends Subsystem {
-  
-  private Talon left, right;
+public class BackClimbSubsystem extends ClimbSubsystem {
 
-  public DriveTrainBurnInSubsystem(int left, int right){
-    this.left = new Talon(left);
-    this.right = new Talon(right);
+  public BackClimbSubsystem(){
+    super(new DoubleSolenoid(2,3));
   }
 
-  @Override
-  public void initDefaultCommand() {
-    // TODO: determine if need to set default command to TeleOpTankDrive
-    //setDefaultCommand(new TeleOpTankDrive());
-  }
-
-  public Talon getLeftTalon () {
-    return left;
-  }
-
-  public Talon getRightTalon () {
-    return right;
-  }
 }

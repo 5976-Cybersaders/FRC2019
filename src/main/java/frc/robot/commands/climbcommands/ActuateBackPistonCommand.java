@@ -7,10 +7,10 @@
 
 package frc.robot.commands.climbcommands;
 
-import frc.robot.subsystems.ClimbSubsystem;
+import frc.robot.subsystems.BackClimbSubsystem;
 
 public class ActuateBackPistonCommand extends ActuatePistonCommand {
-  public ActuateBackPistonCommand(ClimbSubsystem climbSubsystem) {
-    super(climbSubsystem, climbSubsystem.getBackDoubleSolenoid());
+  public ActuateBackPistonCommand(BackClimbSubsystem climbSubsystem) {
+    super(climbSubsystem, climbSubsystem.getSolenoid());
   }
 }
