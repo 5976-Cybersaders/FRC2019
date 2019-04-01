@@ -21,6 +21,7 @@ import frc.robot.commands.drivetraincommands.VisionDriveCommand;
 import frc.robot.commands.drivetraincommands.VisionDriveCompleteAutonomous;
 import frc.robot.commands.drivetraincommands.VisionDriveConSelectedSide;
 import frc.robot.commands.drivetraincommands.VisionDriveWIthAutoCorrectAndDriveStraight;
+import frc.robot.commands.drivetraincommands.finalvision.AutoVisionDriveWithSelectedVision;
 import frc.robot.commands.liftcommands.ExtractHookAfterHatchDeliveryCommandGroup;
 import frc.robot.commands.liftcommands.RaiseLiftToFixedPositionCommand;
 
@@ -73,6 +74,7 @@ public class OI {
   private XBoxButton actuateBackPiston;
   private XBoxButton visionDrive;
   private XBoxButton visionDriveLeft;
+  private XBoxButton visionDriveLarge;
   private XBoxButton deployCargoIntakeControl;
   private XBoxButton extractHookAfterHatch;
 
@@ -84,6 +86,8 @@ public class OI {
     this.switchCamera1 = new XBoxButton(DRIVER_CONTROLLER, RawButton.X);
     this.visionDrive = new XBoxButton(DRIVER_CONTROLLER, RawButton.Y);
     this.visionDriveLeft = new XBoxButton(DRIVER_CONTROLLER, RawButton.B);
+    this.visionDriveLarge = new XBoxButton(DRIVER_CONTROLLER, RawButton.A);
+    
     this.actuateFrontPiston = new XBoxButton(DRIVER_CONTROLLER, RawButton.RB);
     this.actuateBackPiston = new XBoxButton(DRIVER_CONTROLLER, RawButton.LB);
 
@@ -110,17 +114,20 @@ public class OI {
     System.out.println("*** Binding buttons ***");
     
     this.switchCamera1.whenPressed(new SwitchCameraCommand(robot.getCameraSubsystem()));
-    this.visionDrive.whileHeld(new VisionDriveCompleteAutonomous(robot.getDriveTrain(), robot.getCameraSubsystem(), DRIVER_CONTROLLER, false));
-    this.visionDriveLeft.whileHeld(new VisionDriveCompleteAutonomous(robot.getDriveTrain(), robot.getCameraSubsystem(), DRIVER_CONTROLLER, true));
+    this.visionDrive.whileHeld(new AutoVisionDriveWithSelectedVision(robot.getDriveTrain(), robot.getCameraSubsystem(), 2));
+    this.visionDriveLeft.whileHeld(new AutoVisionDriveWithSelectedVision(robot.getDriveTrain(), robot.getCameraSubsystem(), 1));
+    this.visionDriveLarge.whileHeld(new AutoVisionDriveWithSelectedVision(robot.getDriveTrain(), robot.getCameraSubsystem(), 3));
     
-    /* this.actuateFrontPiston.whileHeld(new ActuateFrontPistonCommand(robot.getFrontClimbSubsystem()));
+    /* 
+    this.actuateFrontPiston.whileHeld(new ActuateFrontPistonCommand(robot.getFrontClimbSubsystem()));
     this.actuateBackPiston.whileHeld(new ActuateBackPistonCommand(robot.getBackClimbSubsystem()));
     
     liftToLowHatch.whileHeld(RaiseLiftToFixedPositionCommand.RaiseLiftToLowHatch(robot.getLiftSubsystem()));
     liftToMiddleRocketHatch.whileHeld(RaiseLiftToFixedPositionCommand.RaiseLiftToMidRocketHatch(robot.getLiftSubsystem()));
     liftToMiddleCargo.whileHeld(RaiseLiftToFixedPositionCommand.RaiseLiftToMidRocketCargo(robot.getLiftSubsystem()));
 
-    liftToRocketLowCargo.whileHeld(RaiseLiftToFixedPositionCommand.RaiseLiftToShuttleCargo(robot.getLiftSubsystem())); */
+    liftToRocketLowCargo.whileHeld(RaiseLiftToFixedPositionCommand.RaiseLiftToShuttleCargo(robot.getLiftSubsystem())); 
+    */
     
     //TODO: figure out binding a command to a trigger
     //liftToCargoPickup.whileHeld(RaiseLiftToFixedPositionCommand.RaiseLiftToCargoPickup(robot.getLiftSubsystem()));

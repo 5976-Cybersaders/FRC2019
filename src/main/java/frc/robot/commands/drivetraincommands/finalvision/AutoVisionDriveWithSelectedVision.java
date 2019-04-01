@@ -12,9 +12,8 @@
 
 
 
-package frc.robot.commands.drivetraincommands;
+package frc.robot.commands.drivetraincommands.finalvision;
 
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.SmartDashboardMap;
 import frc.robot.subsystems.CameraSubsystem;
@@ -24,11 +23,10 @@ import frc.robot.subsystems.limelight.ControlMode.CamMode;
 import frc.robot.subsystems.limelight.ControlMode.LedMode;
 import frc.robot.subsystems.limelight.ControlMode.StreamType;
 
-public class VisionDriveCompleteAutonomous extends Command {
+public class AutoVisionDriveWithSelectedVision extends Command {
 
   private DriveTrainSubsystem driveTrainSubsystem;
   private Limelight limelight;
-  private XboxController controller;
   private int deadBandCounter;
   private double deadband;
   private double kp;
@@ -36,16 +34,17 @@ public class VisionDriveCompleteAutonomous extends Command {
   private int txCounter;
   private boolean shouldWeGoLeft;
   private boolean isSnapMode;
+  private int pipeline;
 
   private double txBand = (SmartDashboardMap.VISION_DRIVE_MAX_TX.getDouble() + 1) / 2; // +/-
 
   private VisionCommandData commandData = new VisionCommandData();
 
-  public VisionDriveCompleteAutonomous(DriveTrainSubsystem driveTrainSubsystem, CameraSubsystem cameraSubsystem, XboxController controller, boolean shouldWeGoLeft) {
+  public AutoVisionDriveWithSelectedVision(DriveTrainSubsystem driveTrainSubsystem, CameraSubsystem cameraSubsystem, int pipeline) {
     this.driveTrainSubsystem = driveTrainSubsystem;
-    this.shouldWeGoLeft = shouldWeGoLeft;
+    this.shouldWeGoLeft = false;
+    this.pipeline = pipeline;
     this.limelight = cameraSubsystem.getLimelight();
-    this.controller = controller;
     requires(driveTrainSubsystem);
     requires(cameraSubsystem);
     setInterruptible(true);
@@ -54,7 +53,7 @@ public class VisionDriveCompleteAutonomous extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    this.limelight.setPipeline(SmartDashboardMap.PIPELINE_NUMBER_CHANGE.getIntValue());
+    this.limelight.setPipeline(pipeline);
     this.initCameraSettings(CamMode.kvision, LedMode.kforceOn, StreamType.kPiPMain); //TODO: determine stream type once second camera is plugged in
     this.deadBandCounter = 0;
     this.deadband = SmartDashboardMap.VISION_DEADBAND.getValue();
@@ -135,7 +134,9 @@ public class VisionDriveCompleteAutonomous extends Command {
       isSnapMode = Math.abs(commandData.getTx()) >= SmartDashboardMap.VISION_DRIVE_MAX_TX.getDouble();
     }
     if (oldIsSnapMode != isSnapMode){
-      System.out.println("Snap Mode changed." + " tx: " + commandData.getTx() + " | Deadband counter: " + deadBandCounter + " | isSnapMode: " + isSnapMode + " | Ta: " + commandData.getTa());
+      String desc = "DRIVE";
+      if (isSnapMode) desc = "SNAP";
+      System.out.println("Entered " + desc + " mode.  Tx: " + commandData.getTx() + " | Deadband counter: " + deadBandCounter + " | Ta: " + commandData.getTa());
     }
   }
 
@@ -205,7 +206,6 @@ public class VisionDriveCompleteAutonomous extends Command {
 
   protected int getDeadBandCounter() { return this.deadBandCounter; }
   protected DriveTrainSubsystem getDriveTrainSubsystem() { return this.driveTrainSubsystem; }
-  protected XboxController getXboxController() { return this.controller; }
 
 
 
