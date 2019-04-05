@@ -10,15 +10,29 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
-import frc.robot.commands.climbcommands.ClimbDoNothingCommand;
-
 /**
  * Add your docs here.
  */
-public class BackClimbSubsystem extends ClimbSubsystem {
+public class SolenoidBurnSubsystem extends Subsystem {
+  // Put methods for controlling this subsystem
+  // here. Call these from Commands.
+  private DoubleSolenoid doubleSolenoid;
 
-  public BackClimbSubsystem(){
-    super(new DoubleSolenoid(2,3));
+  public SolenoidBurnSubsystem() {
+    this.doubleSolenoid = new DoubleSolenoid(2,3); 
+  }
+
+
+
+
+  @Override
+  public void initDefaultCommand() {
+    // Set the default command for a subsystem here.
+    // setDefaultCommand(new MySpecialCommand());
+  }
+
+  public DoubleSolenoid getSolenoid() {
+    return doubleSolenoid;
   }
 
 }

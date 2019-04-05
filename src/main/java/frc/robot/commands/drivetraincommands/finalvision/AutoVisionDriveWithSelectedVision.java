@@ -54,7 +54,7 @@ public class AutoVisionDriveWithSelectedVision extends Command {
   @Override
   protected void initialize() {
     this.limelight.setPipeline(pipeline);
-    this.initCameraSettings(CamMode.kvision, LedMode.kforceOn, StreamType.kPiPMain); //TODO: determine stream type once second camera is plugged in
+    this.initCameraSettings(CamMode.kvision, LedMode.kforceOn, StreamType.kPiPChangeable); //TODO: determine stream type once second camera is plugged in
     this.deadBandCounter = 0;
     this.deadband = SmartDashboardMap.VISION_DEADBAND.getValue();
     this.kp = SmartDashboardMap.VISION_KP.getValue();
@@ -101,7 +101,7 @@ public class AutoVisionDriveWithSelectedVision extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
-    this.initCameraSettings(CamMode.kdriver, LedMode.kforceOn, StreamType.kPiPMain);
+    this.initCameraSettings(CamMode.kdriver, LedMode.kforceOn, StreamType.kPiPChangeable);
   }
 
   // Called when another command which requires one or more of the same

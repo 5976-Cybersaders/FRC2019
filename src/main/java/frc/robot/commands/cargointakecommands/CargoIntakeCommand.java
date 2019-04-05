@@ -38,8 +38,8 @@ public class CargoIntakeCommand extends Command {
     double rightTrigger = this.controller.getTriggerAxis(Hand.kRight);
     double leftTrigger = this.controller.getTriggerAxis(Hand.kLeft);
     double speed = leftTrigger > rightTrigger ? 
-      -leftTrigger :
-      rightTrigger;
+      leftTrigger :
+      -rightTrigger;
     this.talon.set(adjustSpeed(speed));
   }
 

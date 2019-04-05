@@ -19,6 +19,7 @@ abstract public class ClimbSubsystem extends Subsystem {
 
   public ClimbSubsystem(DoubleSolenoid solenoid){
     this.solenoid = solenoid; 
+    this.solenoid.set(DoubleSolenoid.Value.kOff);
   }
 
   @Override

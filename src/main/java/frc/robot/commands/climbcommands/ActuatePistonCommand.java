@@ -38,24 +38,22 @@ public abstract class ActuatePistonCommand extends Command {
   }
 
   protected void execute(){
-    if (!pistonIsForward) {
+    if (!pistonIsForward && DriverStation.getInstance().getMatchTime() < 30) {
       doubleSolenoid.set(DoubleSolenoid.Value.kForward);
       pistonIsForward = true;
-      //System.out.println(getClass().getSimpleName() + " moving piston Forward");
+      System.out.println(getClass().getSimpleName() + " moving piston Forward");
     }
   }
 
   @Override
   protected void end() {
     doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
-    System.out.println("ENDED!!!!!!");
-
-    //System.out.println(getClass().getSimpleName() + " moving piston Reverse");
+    System.out.println(getClass().getSimpleName() + " ENDED!!!!!!");
   }
 
   @Override
   protected void interrupted() {
-    System.out.println("INTERPUTED!!!!!!");
+    System.out.println(getClass().getSimpleName() + " INTERPUTED!!!!!!");
     end();
   }
 

@@ -20,7 +20,7 @@ public class InitCameraDriverCommand extends InitCameraCommand {
    * Add your docs here.
    */
   public InitCameraDriverCommand(CameraSubsystem cameraSubsystem) {
-    super(cameraSubsystem, CamMode.kdriver, LedMode.kforceOff, StreamType.kPiPMain);
+    super(cameraSubsystem, CamMode.kdriver, LedMode.kforceOff, StreamType.kPiPChangeable);
   }
 
 }

@@ -17,12 +17,11 @@ import frc.robot.subsystems.LiftSubsystem;
 
 public class ManualMoveLiftCommand extends Command {
 
-  private static final int UPPER_LIMIT_TICKS = 20000;
-  private static final int LOWER_LIMIT_TICKS = 1;
-
   private WPI_TalonSRX talon;
   private XboxController controller;
   private int counter = 0;
+  private int UPPER_LIMIT_TICKS;
+  private int LOWER_LIMIT_TICKS;
 
   public ManualMoveLiftCommand(LiftSubsystem liftSubsystem, XboxController controller) {
     this.talon = liftSubsystem.getTalon();
@@ -35,34 +34,38 @@ public class ManualMoveLiftCommand extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
-    
+    LOWER_LIMIT_TICKS = /*SmartDashboardMap.LIFT_LOWER_TICK_LIMIT.getIntValue()*/1;
+    UPPER_LIMIT_TICKS = /*SmartDashboardMap.LIFT_UPPER_TICK_LIMIT.getIntValue()*/ 28000;
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    int speedAdjustment = 4;
+    int speedAdjustment = /*SmartDashboardMap.LIFT_SPEED_ADJUSTMENT.getIntValue()*/4;
     //If lift moves in reverse direction, don't negate here. Check Robot class if liftTalon is initied.
     double rawSpeed = this.adjustSpeed(this.controller.getY(Hand.kLeft));
     double adjustedSpeed = rawSpeed / speedAdjustment; 
+    double currentPosition = talon.getSelectedSensorPosition();
 
-    if (this.talon.getSelectedSensorPosition() < LOWER_LIMIT_TICKS) {
-      if(adjustedSpeed > 0) {
-        this.talon.set(adjustedSpeed);
-      }
-      else {
-        this.talon.set(0);
-      }
-      System.out.println("Lift below lower limit");
-    }
-    else if (this.talon.getSelectedSensorPosition() > UPPER_LIMIT_TICKS){
+    if (currentPosition < LOWER_LIMIT_TICKS) {
       if(adjustedSpeed < 0) {
         this.talon.set(adjustedSpeed);
       }
       else {
         this.talon.set(0);
       }
-      System.out.println("Lift above upper limit");
+      if(currentPosition < 0) {
+        //System.out.println("Lift below lower limit: " + currentPosition);
+      }
+    }
+    else if (currentPosition > UPPER_LIMIT_TICKS){
+      if(adjustedSpeed > 0) {
+        this.talon.set(adjustedSpeed);
+      }
+      else {
+        this.talon.set(0);
+      }
+      System.out.println("Lift above upper limit " + currentPosition);
     }
     else {
       this.talon.set(adjustedSpeed);
@@ -73,7 +76,7 @@ public class ManualMoveLiftCommand extends Command {
     if (counter == 25) { 
       SmartDashboardMap.LIFT_ENCODER_POSITION.putNumber(this.talon.getSelectedSensorPosition());
       SmartDashboardMap.LIFT_SPEED.putNumber(adjustedSpeed);
-      System.out.println("Raw: " + rawSpeed + " Adj: " + adjustedSpeed);
+      System.out.println("Raw: " + rawSpeed + " Adj: " + adjustedSpeed + " Position: " + currentPosition);
     }
   }
 

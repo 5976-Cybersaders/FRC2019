@@ -33,7 +33,7 @@ public abstract class MoveLiftCommand extends Command {
   //   requires(liftSubsystem);
   //   setInterruptible(true);
   // }
-  public MoveLiftCommand(LiftSubsystem liftSubsystem, int ticks, boolean exitWhenAtPos) {
+  public  MoveLiftCommand(LiftSubsystem liftSubsystem, int ticks, boolean exitWhenAtPos) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     this.exitWhenAtPos = exitWhenAtPos;
@@ -53,7 +53,7 @@ public abstract class MoveLiftCommand extends Command {
   @Override
   protected void execute() {
     this.talon.set(ControlMode.Position, ticks);
-    if (printCounter >= 25){
+    if (printCounter >= 10) {
       SmartDashboardMap.LIFT_CURRENT_TICK_COUNT.putNumber(talon.getSelectedSensorPosition());
       printCounter = 0;
     }
@@ -79,6 +79,6 @@ public abstract class MoveLiftCommand extends Command {
   }
 
   private boolean isAtPos(){
-    return talon.getSelectedSensorPosition() - ticks < kPositionTolerance;
+    return Math.abs(talon.getSelectedSensorPosition() - ticks) < kPositionTolerance;
   }
-}
+} 

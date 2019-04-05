@@ -8,10 +8,10 @@
 package frc.robot.commands.cargointakecommands;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.command.InstantCommand;
+import edu.wpi.first.wpilibj.command.Command;
 import frc.robot.subsystems.CargoIntakeSubsystem;
 
-public class DeployCargoIntakeCommand extends InstantCommand {
+public class DeployCargoIntakeCommand extends Command {
   
   private DoubleSolenoid doubleSolenoid;
 
@@ -25,6 +25,7 @@ public class DeployCargoIntakeCommand extends InstantCommand {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    //this.doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
   }
 
   // Called repeatedly when this Command is scheduled to run
@@ -35,10 +36,16 @@ public class DeployCargoIntakeCommand extends InstantCommand {
     System.out.println("*************Deploying intake****************");
   }
 
+  //Make this return true when this Command no longer needs to run execute()
+  @Override
+  protected boolean isFinished() {
+    return false;
+  }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    this.doubleSolenoid.set(DoubleSolenoid.Value.kOff);
   }
 
   // Called when another command which requires one or more of the same

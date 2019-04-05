@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+
 import frc.robot.commands.cargointakecommands.DeployCargoIntakeCommand;
 import frc.robot.subsystems.BackClimbSubsystem;
 import frc.robot.subsystems.CameraSubsystem;
@@ -23,7 +25,9 @@ import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.FrontClimbSubsystem;
 import frc.robot.subsystems.LiftSubsystem;
+import frc.robot.subsystems.SolenoidBurnSubsystem;
 import frc.robot.subsystems.limelight.ControlMode.LedMode;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -39,12 +43,14 @@ public class Robot extends TimedRobot {
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   private DriveTrainSubsystem driveTrain;
- // private LiftSubsystem liftSubsystem;
-  //private CargoIntakeSubsystem cargoIntakeSubsystem;
+  private LiftSubsystem liftSubsystem;
+  private CargoIntakeSubsystem cargoIntakeSubsystem;
   private CameraSubsystem cameraSubsystem;
 
-  //private FrontClimbSubsystem frontClimbSubsystem;
-  //private BackClimbSubsystem backClimbSubsystem;
+  private FrontClimbSubsystem frontClimbSubsystem;
+  private BackClimbSubsystem backClimbSubsystem;
+
+  //private SolenoidBurnSubsystem solenoidSubsystem;
 
   private int counter = 0;
 
@@ -57,15 +63,18 @@ public class Robot extends TimedRobot {
     System.out.println("****** BEGIN ROBOT INIT ******");
     SmartDashboardMap.reportAll();
     m_oi = new OI(this);
-    //liftSubsystem = new LiftSubsystem(m_oi);
-    //cargoIntakeSubsystem = new CargoIntakeSubsystem(m_oi);
+    liftSubsystem = new LiftSubsystem(m_oi);
+    cargoIntakeSubsystem = new CargoIntakeSubsystem(m_oi);
     driveTrain = new DriveTrainSubsystem(m_oi);
     cameraSubsystem = new CameraSubsystem(); // TODO: change CameraSubsystem constructor
-    
-    //frontClimbSubsystem = new FrontClimbSubsystem();
-    //backClimbSubsystem = new BackClimbSubsystem();
-
+    //solenoidSubsystem = new SolenoidBurnSubsystem();
+    frontClimbSubsystem = new FrontClimbSubsystem();
+    backClimbSubsystem = new BackClimbSubsystem();
+    try {
     m_oi.bindButtons(this);
+    } catch(Exception e) {
+      System.out.println("yeeeet");
+    }
 
     System.out.println("****** END ROBOT INIT ******");
   }
@@ -122,7 +131,8 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.start();
     }
     this.cameraSubsystem.initLimelight();
-    //liftSubsystem.initTalon(); TODO: uncomment this for production code
+    liftSubsystem.initTalon(); //TODO: uncomment this for production code
+    cargoIntakeSubsystem.getDoubleSolenoid().set(DoubleSolenoid.Value.kReverse);
   }
 
   /**
@@ -143,7 +153,8 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     cameraSubsystem.initLimelight();
-    //liftSubsystem.initTalon(); TODO: uncomment this for production code
+    cargoIntakeSubsystem.getDoubleSolenoid().set(DoubleSolenoid.Value.kReverse);
+    //liftSubsystem.initTalon(); // TODO: uncomment this for production code
   }
 
   /**
@@ -162,11 +173,21 @@ public class Robot extends TimedRobot {
   }
 
   public DriveTrainSubsystem getDriveTrain() { return driveTrain; }
-  //public LiftSubsystem getLiftSubsystem() { return liftSubsystem; }
-  //public CargoIntakeSubsystem getCargoIntakeSubsystem() { return cargoIntakeSubsystem; }
+  public LiftSubsystem getLiftSubsystem() { return liftSubsystem; }
+  public CargoIntakeSubsystem getCargoIntakeSubsystem() { return cargoIntakeSubsystem; }
   public CameraSubsystem getCameraSubsystem() { return cameraSubsystem; }
-  //public FrontClimbSubsystem getFrontClimbSubsystem() { return frontClimbSubsystem; }
-  //public BackClimbSubsystem getBackClimbSubsystem() { return backClimbSubsystem; }
+  public FrontClimbSubsystem getFrontClimbSubsystem() { 
+    return frontClimbSubsystem; 
+  }
+  public BackClimbSubsystem getBackClimbSubsystem() {
+    return backClimbSubsystem;
+  }
+
+  /*
+  public SolenoidBurnSubsystem getSubsystem() {
+    return solenoidSubsystem;
+  }
+  */
 
   
 }

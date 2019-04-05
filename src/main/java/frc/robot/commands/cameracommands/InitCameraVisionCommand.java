@@ -20,7 +20,7 @@ public class InitCameraVisionCommand extends InitCameraCommand {
    * Add your docs here.
    */
   public InitCameraVisionCommand(CameraSubsystem cameraSubsystem) {
-    super(cameraSubsystem, CamMode.kvision, LedMode.kforceOn, StreamType.kPiPSecondary);
+    super(cameraSubsystem, CamMode.kvision, LedMode.kforceOn, StreamType.kPiPChangeable);
   }
 
 }

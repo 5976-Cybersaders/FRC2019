@@ -9,11 +9,12 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.buttons.Trigger;
 
 /**
  * Add your docs here.
  */
-public class XBoxTrigger implements CMHDigitalInput {
+public class XBoxTrigger extends Trigger implements CMHDigitalInput {
 
     private XboxController controller;
     private GenericHID.Hand hand;

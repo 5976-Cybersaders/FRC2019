@@ -37,8 +37,8 @@ public class CameraSubsystem extends Subsystem {
     if(!isInited){
       isInited = true;
       this.limelight.setCamMode(CamMode.kdriver);
-      this.limelight.setLEDMode(LedMode.kforceOn);
-      this.limelight.setStream(StreamType.kPiPMain);
+      this.limelight.setLEDMode(LedMode.kforceOff);
+      this.limelight.setStream(StreamType.kPiPChangeable);
     }
   }
 

@@ -26,7 +26,8 @@ public class CargoIntakeSubsystem extends Subsystem {
   private OI oi;
 
   public CargoIntakeSubsystem(OI oi){
-    this.doubleSolenoid =new DoubleSolenoid(4,5); 
+    this.doubleSolenoid = new DoubleSolenoid(4,5); 
+    this.doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
     this.talon = new Talon(RobotMap.INTAKE_TALON_ID);
     this.oi = oi;
   }

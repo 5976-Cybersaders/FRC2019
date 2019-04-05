@@ -107,6 +107,11 @@ public class SmartDashboardMap {
     public static final JudanValue VISION_AUTODRIVE_SPEED = makeValue("Vision autodrive speed", 0.5);
     // End used in old commans only.
 
+    public static final JudanValue LIFT_UPPER_TICK_LIMIT = makeValue("Vision upper tick limit", 28000);
+    public static final JudanValue LIFT_LOWER_TICK_LIMIT = makeValue("Vision upper tick limit", 0);
+    public static final JudanValue LIFT_SPEED_ADJUSTMENT = makeValue("Vision Speed Adjustment", 4);
+    
+
 
     
 

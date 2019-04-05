@@ -259,6 +259,8 @@ public class Limelight {
      */ 
     public void setStream(StreamType stream) {
         m_table.getEntry("stream").setValue(stream.getValue());
+        IllegalStateException exception = new IllegalStateException("Reporting stream type " + stream);
+        exception.printStackTrace();
     }
 
     public StreamType getStream() {
